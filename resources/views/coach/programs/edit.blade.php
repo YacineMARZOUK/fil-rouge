@@ -48,17 +48,17 @@
                         </div>
 
                         <div>
-                            <label for="difficulty_level" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                            <label for="difficulty" class="block text-[#CDFB47] text-lg font-medium mb-2">
                                 Niveau de difficulté
                             </label>
-                            <select name="difficulty_level" id="difficulty_level" required
+                            <select name="difficulty" id="difficulty" required
                                     class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300">
                                 <option value="">Sélectionnez un niveau</option>
-                                <option value="beginner" {{ old('difficulty_level', $program->difficulty_level) == 'beginner' ? 'selected' : '' }}>Débutant</option>
-                                <option value="intermediate" {{ old('difficulty_level', $program->difficulty_level) == 'intermediate' ? 'selected' : '' }}>Intermédiaire</option>
-                                <option value="advanced" {{ old('difficulty_level', $program->difficulty_level) == 'advanced' ? 'selected' : '' }}>Avancé</option>
+                                <option value="facile" {{ old('difficulty', $program->difficulty) == 'facile' ? 'selected' : '' }}>facile</option>
+                                <option value="moyen" {{ old('difficulty', $program->difficulty) == 'moyen' ? 'selected' : '' }}>moyen</option>
+                                <option value="difficile" {{ old('difficulty', $program->difficulty) == 'difficile' ? 'selected' : '' }}>difficile</option>
                             </select>
-                        </div>
+                        </div>                                         
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
