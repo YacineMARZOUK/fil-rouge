@@ -43,9 +43,9 @@ class Activity extends Model
 
     public function participants()
     {
-        return $this->belongsToMany(User::class, 'activity_participants')
-            ->withTimestamps()
-            ->withPivot('status');
+        return $this->belongsToMany(User::class, 'activity_participants');
+           
+            
     }
 
     public function getDateFormattedAttribute()

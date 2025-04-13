@@ -17,15 +17,14 @@ class ActivityController extends Controller
     }
 
     public function index()
-    {
-        $activities = Activity::where('coach_id', Auth::id())
-            ->with(['program', 'participants'])
-            ->latest()
-            ->paginate(10);
+{
+    $activities = Activity::where('coach_id', Auth::id())
+        ->with('participants')  // Removed the array brackets
+        ->latest()
+        ->paginate(10);
 
-        return view('coach.activities.index', compact('activities'));
-    }
-
+    return view('coach.activities.index', compact('activities'));
+}
     public function create()
     {
         $programs = Program::where('coach_id', Auth::id())->get();
@@ -38,21 +37,24 @@ class ActivityController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'program_id' => 'nullable|exists:programs,id',
             'date' => 'required|date|after:now',
             'duration' => 'required|integer|min:15',
             'user_id' => 'required|exists:users,id'
         ]);
-
-        $activity = new Activity($validated);
+    
+        // Create the activity with validated fields except user_id
+        $activityData = collect($validated)->except(['user_id'])->toArray();
+        $activity = new Activity($activityData);
         $activity->coach_id = Auth::id();
         $activity->save();
-
+    
+        // Attach the selected user as a participant
+        $activity->participants()->attach($request->user_id);
+    
         return redirect()
             ->route('coach.activities.index')
             ->with('success', 'L\'activité a été créée avec succès.');
     }
-
     public function show(Activity $activity)
     {
         $this->authorize('view', $activity);
