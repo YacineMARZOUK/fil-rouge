@@ -23,7 +23,8 @@ class DashboardController extends Controller
         
         // Statistiques de base
         $stats = [
-            'total_clients' => User::where('role', 'user')->count(),
+            'total_clients' => User::where('role', 'client')->count(),
+
             'total_programs' => Program::where('coach_id', $coach->id)->count(),
             'total_activities' => Activity::where('coach_id', $coach->id)->count(),
         ];

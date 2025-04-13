@@ -101,38 +101,7 @@
                 </div>
             </div>
 
-            <!-- Objectifs récents -->
-            <div class="bg-black overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="p-6">
-                    <h2 class="text-lg font-semibold text-gray-400 mb-4">Objectifs Clients Récents</h2>
-                    @if($recent_goals->isEmpty())
-                        <p class="text-gray-500">Aucun objectif récent</p>
-                    @else
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full">
-                                <thead>
-                                    <tr class="border-b border-gray-700">
-                                        <th class="text-left py-3 px-4 text-gray-400">Client</th>
-                                        <th class="text-left py-3 px-4 text-gray-400">Objectif</th>
-                                        <th class="text-left py-3 px-4 text-gray-400">Niveau</th>
-                                        <th class="text-left py-3 px-4 text-gray-400">Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($recent_goals as $goal)
-                                        <tr class="border-b border-gray-700">
-                                            <td class="py-3 px-4 text-white">{{ $goal->user->name }}</td>
-                                            <td class="py-3 px-4 text-gray-400">{{ ucfirst($goal->objectif_principal) }}</td>
-                                            <td class="py-3 px-4 text-gray-400">{{ ucfirst($goal->niveau_activite) }}</td>
-                                            <td class="py-3 px-4 text-gray-400">{{ $goal->created_at->format('d/m/Y') }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
-                </div>
-            </div>
+        
         </div>
         
         <!-- Actions rapides -->

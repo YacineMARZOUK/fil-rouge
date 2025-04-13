@@ -10,14 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class ProgramController extends Controller
 {
-    public function index()
-    {
-        $programs = Program::where('coach_id', Auth::id())
-                         ->latest()
-                         ->paginate(10);
+    public function index(Request $request)
+{
+    $search = $request->input('search');
 
-        return view('coach.programs.index', compact('programs'));
-    }
+    $programs = Program::where('coach_id', Auth::id())
+        ->when($search, function ($query, $search) {
+            return $query->where('name', 'ILIKE', "%{$search}%");
+        })
+        ->latest()
+        ->paginate(10);
+
+    return view('coach.programs.index', compact('programs', 'search'));
+}
 
     public function create()
     {
@@ -52,13 +57,16 @@ class ProgramController extends Controller
     }
 
     public function edit(Program $program)
-    {
-        if ($program->coach_id !== Auth::id()) {
-            abort(403);
-        }
-
-        return view('coach.programs.edit', compact('program'));
+{
+    if ($program->coach_id !== Auth::id()) {
+        abort(403);
     }
+    $clients = User::where('role', 'client')->get();
+
+    return view('coach.programs.edit', compact('program', 'clients'));
+    
+}
+
 
     public function update(Request $request, Program $program)
     {

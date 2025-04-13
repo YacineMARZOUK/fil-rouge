@@ -19,10 +19,21 @@
                 @endif
 
                 <div class="mb-4">
-                    <input type="text" 
-                           placeholder="Rechercher un programme..." 
-                           class="w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50 placeholder-gray-400">
+                    <form method="GET" action="{{ route('coach.programs.index') }}" class="flex space-x-2">
+                        <input 
+                            type="text" 
+                            name="search"
+                            value="{{ request('search') }}"
+                            placeholder="Rechercher un programme..." 
+                            class="w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50 placeholder-gray-400">
+                        
+                        <button type="submit" class="bg-[#CDFB47] text-black px-4 py-2 rounded-md hover:bg-[#5B5B5B] hover:text-[#CDFB47] transition-colors duration-300">
+                            Rechercher
+                        </button>
+                    </form>
                 </div>
+                
+                
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($programs as $program)
