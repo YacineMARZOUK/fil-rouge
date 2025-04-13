@@ -24,7 +24,6 @@ class Activity extends Model
         'location',
         'max_participants',
         'price',
-        'program_id',
         'coach_id'
     ];
 
@@ -35,10 +34,7 @@ class Activity extends Model
         'price' => 'decimal:2'
     ];
 
-    public function program()
-    {
-        return $this->belongsTo(Program::class);
-    }
+   
 
     public function coach()
     {

@@ -36,14 +36,7 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <select name="filters[program_id]" class="form-control">
-                                        <option value="">Tous les programmes</option>
-                                        @foreach($programs as $program)
-                                            <option value="{{ $program->id }}" {{ request('filters.program_id') == $program->id ? 'selected' : '' }}>
-                                                {{ $program->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-2">
