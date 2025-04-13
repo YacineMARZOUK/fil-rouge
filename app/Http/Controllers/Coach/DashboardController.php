@@ -42,6 +42,10 @@ class DashboardController extends Controller
                         ->take(5)
                         ->get();
 
-        return view('coach.dashboard', compact('stats', 'recent_programs', 'recent_goals'));
+        $clients = User::where('role', 'user')->get();
+        
+                        
+
+        return view('coach.dashboard', data: compact('stats', 'recent_programs', 'recent_goals', 'clients'));
     }
 } 

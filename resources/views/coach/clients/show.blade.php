@@ -8,10 +8,10 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3>Détails de l'objectif</h3>
                     <div>
-                        <a href="{{ route('coach.user-goals.edit', $goal) }}" class="btn btn-primary">
+                        <a href="{{ route('coach.clients.edit', $goal) }}" class="btn btn-primary">
                             <i class="fas fa-edit"></i> Modifier
                         </a>
-                        <a href="{{ route('coach.user-goals.index') }}" class="btn btn-secondary">
+                        <a href="{{ route('coach.clients.index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Retour
                         </a>
                     </div>

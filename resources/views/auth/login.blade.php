@@ -1,62 +1,76 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12 bg-black">
-    <div class="max-w-md mx-auto sm:px-6 lg:px-8">
-        <div class="form-container">
-            <h1 class="form-title">Connexion</h1>
-
-            @if($errors->any())
-                <div class="form-error">
-                    <ul class="list-disc list-inside">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+<div class="min-h-screen bg-black py-12">
+    <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-black rounded-lg p-6">
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-[#CDFB47]">Connexion</h1>
+                <p class="mt-2 text-gray-400">Connectez-vous à votre compte</p>
+            </div>
 
             <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
 
-                <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus
-                           class="form-input" placeholder="votre@email.com">
+                <div>
+                    <label for="email" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                        Adresse email
+                    </label>
+                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
+                           class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                           placeholder="Entrez votre email">
                 </div>
 
-                <div class="form-group">
-                    <label for="password" class="form-label">Mot de passe</label>
-                    <input type="password" name="password" id="password" required
-                           class="form-input" placeholder="••••••••">
+                <div>
+                    <label for="password" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                        Mot de passe
+                    </label>
+                    <input id="password" type="password" name="password" required
+                           class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                           placeholder="Entrez votre mot de passe">
                 </div>
 
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
-                        <input type="checkbox" name="remember" id="remember" 
-                               class="rounded bg-[#1A1A1A] border-[#5B5B5B] text-[#CDFB47] focus:ring-[#CDFB47]">
-                        <label for="remember" class="ml-2 text-sm text-white">Se souvenir de moi</label>
+                        <input id="remember_me" type="checkbox" name="remember"
+                               class="h-4 w-4 text-[#CDFB47] focus:ring-[#CDFB47] border-[#5B5B5B] rounded">
+                        <label for="remember_me" class="ml-2 block text-sm text-gray-400">
+                            Se souvenir de moi
+                        </label>
                     </div>
 
                     @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" 
-                           class="text-sm text-[#CDFB47] hover:text-white">
+                        <a class="text-sm text-[#CDFB47] hover:text-[#5B5B5B] transition-colors duration-300"
+                           href="{{ route('password.request') }}">
                             Mot de passe oublié ?
                         </a>
                     @endif
                 </div>
 
-                <div class="flex justify-end">
-                    <button type="submit" class="form-button-primary">
+                @if($errors->any())
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <div>
+                    <button type="submit"
+                            class="w-full bg-[#CDFB47] text-black px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#5B5B5B] hover:text-[#CDFB47] transition-all duration-300">
                         Se connecter
                     </button>
                 </div>
 
-                <div class="text-center mt-4">
-                    <span class="text-white">Pas encore de compte ?</span>
-                    <a href="{{ route('register') }}" class="text-[#CDFB47] hover:text-white ml-1">
-                        S'inscrire
-                    </a>
+                <div class="text-center mt-6">
+                    <p class="text-gray-400">
+                        Pas encore de compte ?
+                        <a href="{{ route('register') }}" class="text-[#CDFB47] hover:text-[#5B5B5B] transition-colors duration-300">
+                            S'inscrire
+                        </a>
+                    </p>
                 </div>
             </form>
         </div>

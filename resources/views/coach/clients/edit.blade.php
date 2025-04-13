@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('coach.user-goals.update', $goal) }}">
+                    <form method="POST" action="{{ route('coach.clients.update', $goal) }}">
                         @csrf
                         @method('PUT')
 
@@ -145,7 +145,7 @@
                             <button type="submit" class="btn btn-primary">
                                 Mettre à jour
                             </button>
-                            <a href="{{ route('coach.user-goals.show', $goal) }}" class="btn btn-secondary">
+                            <a href="{{ route('coach.clients.show', $goal) }}" class="btn btn-secondary">
                                 Annuler
                             </a>
                         </div>

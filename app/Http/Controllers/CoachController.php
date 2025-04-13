@@ -234,7 +234,7 @@ class CoachController extends Controller
         $goals = $query->with(['user', 'program'])
             ->paginate(10);
 
-        return view('coach.user-goals.index', compact('goals', 'user'));
+        return view('coach.clients.index', compact('goals', 'user'));
     }
 
     public function createUserGoal(User $user)
@@ -243,7 +243,7 @@ class CoachController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
-        return view('coach.user-goals.create', compact('user', 'programs'));
+        return view('coach.clients.create', compact('user', 'programs'));
     }
 
     public function storeUserGoal(Request $request, User $user)
@@ -267,14 +267,14 @@ class CoachController extends Controller
             'progress' => 0
         ]);
 
-        return redirect()->route('coach.user-goals.show', ['user' => $user, 'goal' => $goal])
+        return redirect()->route('coach.clients.show', ['user' => $user, 'goal' => $goal])
             ->with('success', 'Objectif créé avec succès');
     }
 
     public function showUserGoal(User $user, UserGoal $goal)
     {
         $this->authorize('view', $goal);
-        return view('coach.user-goals.show', compact('goal', 'user'));
+        return view('coach.clients.show', compact('goal', 'user'));
     }
 
     public function editUserGoal(User $user, UserGoal $goal)
@@ -284,7 +284,7 @@ class CoachController extends Controller
             ->where('user_id', $user->id)
             ->get();
 
-        return view('coach.user-goals.edit', compact('goal', 'user', 'programs'));
+        return view('coach.clients.edit', compact('goal', 'user', 'programs'));
     }
 
     public function updateUserGoal(Request $request, User $user, UserGoal $goal)
@@ -303,7 +303,7 @@ class CoachController extends Controller
 
         $goal->update($request->all());
 
-        return redirect()->route('coach.user-goals.show', ['user' => $user, 'goal' => $goal])
+        return redirect()->route('coach.clients.show', ['user' => $user, 'goal' => $goal])
             ->with('success', 'Objectif mis à jour avec succès');
     }
 
@@ -312,7 +312,7 @@ class CoachController extends Controller
         $this->authorize('delete', $goal);
         $goal->delete();
 
-        return redirect()->route('coach.user-goals.index', $user)
+        return redirect()->route('coach.clients.index', $user)
             ->with('success', 'Objectif supprimé avec succès');
     }
 } 

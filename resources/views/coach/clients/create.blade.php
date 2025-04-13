@@ -10,7 +10,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('coach.user-goals.store') }}">
+                    <form method="POST" action="{{ route('coach.clients.store') }}">
                         @csrf
 
                         <div class="form-group">
@@ -116,7 +116,7 @@
                             <button type="submit" class="btn btn-primary">
                                 Créer l'objectif
                             </button>
-                            <a href="{{ route('coach.user-goals.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('coach.clients.index') }}" class="btn btn-secondary">
                                 Annuler
                             </a>
                         </div>

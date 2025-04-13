@@ -59,9 +59,18 @@ class ProfileController extends Controller
     }
 
     public function form()
-    {
-        return view('profile.form');
+{
+    $user = Auth::user();
+    
+    // Vérifier si l'utilisateur a déjà des objectifs (un profil complet)
+    if ($user->goals()->exists()) {
+        // Rediriger vers la page de shop avec un message
+        return redirect()->route('shop')
+            ->with('info', 'Vous avez déjà complété votre profil.');
     }
+    
+    return view('profile.form');
+}
 
     public function complete(Request $request)
     {

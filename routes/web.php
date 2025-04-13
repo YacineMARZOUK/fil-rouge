@@ -23,7 +23,7 @@ use App\Http\Controllers\ProfileController;
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 })->name('home');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -46,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Coach\DashboardController::class, 'index'])->name('dashboard');
         Route::resource('programs', App\Http\Controllers\Coach\ProgramController::class);
         Route::resource('activities', App\Http\Controllers\Coach\ActivityController::class);
-        Route::resource('user-goals', App\Http\Controllers\Coach\UserGoalController::class);
+        Route::resource('clients', App\Http\Controllers\Coach\ClientController::class);
     });
 
     // Routes du panier
@@ -63,6 +63,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/programmes/recommandations', [ProgramController::class, 'recommanderProgrammes'])->name('programs.recommendations');
     Route::post('/programmes/{program}/inscription', [ProgramController::class, 'assignerProgrammeAutomatique'])->name('programs.enroll');
+    Route::get('/programs/create', [ProgramController::class, 'create'])->name('programs.create');
 });
 
 // Routes de la boutique
