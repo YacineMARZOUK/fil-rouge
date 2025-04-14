@@ -25,9 +25,6 @@
                         <input type="date" name="start_date" class="input-field" 
                                value="{{ request('start_date') }}">
 
-                        <input type="date" name="end_date" class="input-field" 
-                               value="{{ request('end_date') }}">
-
                         <div class="hidden md:block"></div> <!-- Placeholder pour alignement -->
 
                         <button type="submit" class="btn-primary w-full flex justify-center items-center">
@@ -62,10 +59,9 @@
                                         @endif
                                     </a>
                                 </th>
-                                <th class="px-6 py-3 text-left font-medium text-gray-300">Programme</th>
+                                
                                 <th class="hidden md:table-cell px-6 py-3 text-left font-medium text-gray-300">Date</th>
-                                <th class="hidden md:table-cell px-6 py-3 text-left font-medium text-gray-300">Lieu</th>
-                                <th class="px-6 py-3 text-left font-medium text-gray-300">Participants</th>
+                                <th class="px-6 py-3 text-left font-medium text-gray-300">Description</th>
                                 <th class="px-6 py-3 text-left font-medium text-gray-300">Actions</th>
                             </tr>
                         </thead>
@@ -79,25 +75,13 @@
                                             <div class="text-sm text-gray-400">
                                                 {{ $activity->date->format('d/m/Y H:i') }}
                                             </div>
-                                            <div class="text-sm text-gray-400">
-                                                {{ $activity->location }}
-                                            </div>
+                                            
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-light">
-                                        @if($activity->program)
-                                            {{ $activity->program->name }}
-                                        @else
-                                            <span class="text-gray-400 italic">Aucun programme</span>
-                                        @endif
-                                    </td>
+                                    
                                     <td class="hidden md:table-cell px-6 py-4 text-light">{{ $activity->date->format('d/m/Y H:i') }}</td>
-                                    <td class="hidden md:table-cell px-6 py-4 text-light">{{ $activity->location }}</td>
-                                    <td class="px-6 py-4">
-                                        <span class="px-2 py-1 text-dark text-xs font-semibold rounded-full {{ $activity->participants->count() >= $activity->max_participants ? 'bg-red-500' : 'bg-primary' }}">
-                                            {{ $activity->participants->count() }}/{{ $activity->max_participants }}
-                                        </span>
-                                    </td>
+                                    <td class="hidden md:table-cell px-6 py-4 text-light">{{ $activity->description }}</td>
+                                    
                                     <td class="px-6 py-4">
                                         <div class="flex space-x-2">
                                             <a href="{{ route('coach.activities.show', $activity) }}" 

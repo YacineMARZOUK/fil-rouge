@@ -28,29 +28,11 @@
                 </div>
 
                 <div>
-                    <label for="program_id" class="block text-[#CDFB47] text-lg font-medium mb-2">Programme associé</label>
-                    <select id="program_id" name="program_id"
-                        class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] transition-colors duration-300">
-                        <option value="">Sélectionner un programme</option>
-                        @foreach($programs as $program)
-                            <option value="{{ $program->id }}"
-                                {{ old('program_id', $activity->program_id) == $program->id ? 'selected' : '' }}>
-                                {{ $program->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div>
                     <label for="date" class="block text-[#CDFB47] text-lg font-medium mb-2">Date et heure</label>
                     <input id="date" type="datetime-local" name="date"
                         value="{{ old('date', $activity->date->format('Y-m-d\TH:i')) }}" required
                         class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] transition-colors duration-300">
                 </div>
-
-                
-
-                
 
                 <div>
                     <label for="duration" class="block text-[#CDFB47] text-lg font-medium mb-2">Durée (en minutes)</label>
@@ -59,8 +41,6 @@
                         class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] transition-colors duration-300"
                         placeholder="Durée de l'activité">
                 </div>
-
-                
 
                 @if($errors->any())
                     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg">
