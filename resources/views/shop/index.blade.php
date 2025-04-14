@@ -210,30 +210,47 @@ function showNotification(message, type = 'success') {
 async function addToCart() {
     if (isProcessing) return;
     isProcessing = true;
-    
+
     const quantity = parseInt(document.getElementById('modalQuantity').value);
+    console.log('Ajout au panier:', currentProductId, quantity);
     
+    // Vérification du token CSRF
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    if (!csrfToken) {
+        console.error('CSRF token not found');
+        showNotification('❌ Erreur CSRF: Token non trouvé', 'error');
+        isProcessing = false;
+        return;
+    }
+
     try {
-        const response = await fetch(`/cart/add/${currentProductId}`, {
+        console.log(`Envoi de la requête à /cart/${currentProductId}`);
+        const response = await fetch(`/cart/${currentProductId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                'X-CSRF-TOKEN': csrfToken.content,
+                'Accept': 'application/json'  // Ajout de l'en-tête Accept
             },
             body: JSON.stringify({ quantity })
         });
-        
+
+        console.log('Statut de la réponse:', response.status);
         const data = await response.json();
-        
+        console.log('Réponse API:', data);
+
         if (response.ok) {
-            showNotification('Produit ajouté au panier avec succès');
-            document.getElementById('cartCount').textContent = data.cartCount;
+            showNotification('✅ Produit ajouté au panier avec succès');
+            document.getElementById('cartCount').textContent = data.cart_count;
             closeModal();
         } else {
-            showNotification(data.message || 'Une erreur est survenue', 'error');
+            const message = data?.message || '❌ Une erreur est survenue';
+            showNotification(message, 'error');
+            console.error('Erreur API:', data);
         }
     } catch (error) {
-        showNotification('Une erreur est survenue', 'error');
+        console.error('Exception complète:', error);
+        showNotification('❌ Une erreur est survenue: ' + error.message, 'error');
     } finally {
         isProcessing = false;
     }

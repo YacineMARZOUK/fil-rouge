@@ -26,25 +26,56 @@ class CartController extends Controller
     }
 
     public function store(Request $request, Product $product)
-    {
-        $request->validate([
-            'quantity' => 'required|integer|min:1|max:10'
+{
+    $request->validate([
+        'quantity' => 'required|integer|min:1|max:10'
+    ]);
+    
+    $userId = Auth::id();
+    $quantity = $request->quantity;
+    
+    // Calcul du prix total (c'est ce qui manque)
+    $totalPrice = $product->price * $quantity;
+    
+    // Vérifie si le produit existe déjà dans le panier de l'utilisateur
+    $existingItem = CartItem::where('user_id', $userId)
+        ->where('product_id', $product->id)
+        ->first();
+    
+    if ($existingItem) {
+        // Met à jour la quantité
+        $newQuantity = $existingItem->quantity + $quantity;
+        
+        // Limite maximale : 10 au total
+        if ($newQuantity > 10) {
+            return response()->json([
+                'message' => 'Quantité maximale autorisée atteinte pour ce produit.'
+            ], 400);
+        }
+        
+        // Calcul du nouveau prix total
+        $newTotalPrice = $product->price * $newQuantity;
+        
+        $existingItem->update([
+            'quantity' => $newQuantity,
+            'total_price' => $newTotalPrice // Ajout du prix total
         ]);
-
-        $totalPrice = $product->price * $request->quantity;
-
+    } else {
+        // Crée un nouvel article dans le panier
         CartItem::create([
-            'user_id' => Auth::id(),
+            'user_id' => $userId,
             'product_id' => $product->id,
-            'quantity' => $request->quantity,
-            'total_price' => $totalPrice
-        ]);
-
-        return response()->json([
-            'message' => 'Produit ajouté au panier',
-            'cart_count' => Auth::user()->cartItems()->sum('quantity')
+            'quantity' => $quantity,
+            'total_price' => $totalPrice // Ajout du prix total
         ]);
     }
+    
+    return response()->json([
+        'message' => 'Produit ajouté au panier',
+        'cart_count' => Auth::user()->cartItems()->sum('quantity')
+    ]);
+}
+
 
     public function update(Request $request, CartItem $cartItem)
     {
