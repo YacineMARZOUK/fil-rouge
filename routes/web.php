@@ -64,6 +64,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/programmes/recommandations', [ProgramController::class, 'recommanderProgrammes'])->name('programs.recommendations');
     Route::post('/programmes/{program}/inscription', [ProgramController::class, 'assignerProgrammeAutomatique'])->name('programs.enroll');
     Route::get('/programs/create', [ProgramController::class, 'create'])->name('programs.create');
+    Route::get('/programmes/{program}', [ProgramController::class, 'afficherDetails'])->name('programs.details');
+
 });
 
 // Routes de la boutique

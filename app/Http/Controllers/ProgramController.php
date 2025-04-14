@@ -53,4 +53,9 @@ class ProgramController extends Controller
         $user->programs()->attach($program->id);
         return back()->with('success', 'Programme assigné avec succès !');
     }
+    public function afficherDetails(Program $program)
+{
+    return view('programs.details', compact('program'));
+}
+
 } 
