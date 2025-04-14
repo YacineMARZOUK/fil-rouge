@@ -22,35 +22,31 @@
     @else
         <h1 class="text-3xl font-bold text-gray-800 mb-8">Programmes Recommandés</h1>
 
-        @if($programs->isEmpty())
-            <div class="text-center py-8">
-                <p class="text-gray-600">Aucun programme ne correspond à vos critères pour le moment.</p>
-            </div>
-        @else
+        
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach($programs as $program)
+                @foreach($programs as $programme)
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                         <div class="p-6">
-                            <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ $program->name }}</h2>
-                            <p class="text-gray-600 mb-4">{{ Str::limit($program->description, 100) }}</p>
+                            <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ $programme->name }}</h2>
+                            <p class="text-gray-600 mb-4">{{ Str::limit($programme->description, 100) }}</p>
                             
                             <div class="flex items-center mb-4">
                                 <span class="text-sm font-medium text-gray-500 mr-2">Difficulté:</span>
                                 <span class="px-2 py-1 text-xs font-semibold rounded
-                                    @if($program->difficulty === 'beginner') bg-green-100 text-green-800
-                                    @elseif($program->difficulty === 'intermediate') bg-yellow-100 text-yellow-800
+                                    @if($programme->difficulty === 'beginner') bg-green-100 text-green-800
+                                    @elseif($programme->difficulty === 'intermediate') bg-yellow-100 text-yellow-800
                                     @else bg-red-100 text-red-800
                                     @endif">
-                                    {{ ucfirst($program->difficulty) }}
+                                    {{ ucfirst($programme->difficulty) }}
                                 </span>
                             </div>
                             
                             <div class="flex items-center mb-4">
                                 <span class="text-sm font-medium text-gray-500 mr-2">Durée:</span>
-                                <span class="text-gray-700">{{ $program->duration }} semaines</span>
+                                <span class="text-gray-700">{{ $programme->duration }} semaines</span>
                             </div>
 
-                            <form action="{{ route('programs.enroll', $program) }}" method="POST" class="mt-4">
+                            <form action="{{ route('programs.enroll', $programme) }}" method="POST" class="mt-4">
                                 @csrf
                                 <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
                                     Commencer ce programme
@@ -64,7 +60,7 @@
             <div class="mt-8">
                 {{ $programs->links() }}
             </div>
-        @endif
+        
     @endif
 </div>
 @endsection 

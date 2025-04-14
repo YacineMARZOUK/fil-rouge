@@ -10,32 +10,37 @@ use Illuminate\Support\Facades\Auth;
 class ProgramController extends Controller
 {
     public function recommanderProgrammes()
-    {
-        $user = Auth::user();
-        $userGoal = UserGoal::where('user_id', $user->id)->first();
+{
+    $user = Auth::user();
+    $userGoal = UserGoal::where('user_id', $user->id)->first();
 
-        if (!$userGoal) {
-            return view('programs.recommended', [
-                'programs' => collect([]),
-                'error' => 'Veuillez compléter votre profil pour obtenir des recommandations personnalisées.'
-            ]);
-        }
-
-        $difficulty = match ($userGoal->niveau_activite) {
-            'sedentaire' => 'beginner',
-            'moderement_actif' => 'intermediate',
-            'tres_actif' => 'advanced',
-            default => 'beginner'
-        };
-
-        $programs = Program::where('difficulty', $difficulty)
-            ->where('objectif_cible', $userGoal->objectif_principal)
-            ->paginate(6);
-
+    if (!$userGoal) {
         return view('programs.recommended', [
-            'programs' => $programs
+            'programs' => collect([]),
+            'error' => 'Veuillez compléter votre profil pour obtenir des recommandations personnalisées.'
         ]);
     }
+
+    // Déduire le niveau de difficulté selon le niveau d'activité
+    $difficulty = match ($userGoal->niveau_activite) {
+        'sedentaire' => 'beginner',
+        'moderement_actif' => 'intermediate',
+        'actif', 'tres_actif' => 'advanced',
+        default => 'beginner'
+    };
+
+    // Récupération des programmes recommandés
+    $programs = Program::where('user_id', $user->id) // pour lier uniquement aux programmes qui lui sont liés, si besoin
+        
+        ->where('objectif_cible', $userGoal->objectif_principal)
+        
+        ->paginate(6);
+
+    return view('programs.recommended', [
+        'programs' => $programs
+    ]);
+}
+
 
     public function assignerProgrammeAutomatique(Program $program)
     {
