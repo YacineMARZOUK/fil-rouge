@@ -16,15 +16,26 @@ class ActivityController extends Controller
         $this->middleware(['auth', 'role:coach']);
     }
 
-    public function index()
-{
-    $activities = Activity::where('coach_id', Auth::id())
-        ->with('participants')  // Removed the array brackets
-        ->latest()
-        ->paginate(10);
-
-    return view('coach.activities.index', compact('activities'));
-}
+    public function index(Request $request)
+    {
+        $query = Activity::where('coach_id', Auth::id())
+            ->with('participants')
+            ->latest();
+    
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+    
+        if ($request->filled('start_date')) {
+            $query->whereDate('date', '>=', $request->start_date);
+        }
+        
+    
+        $activities = $query->paginate(10);
+    
+        return view('coach.activities.index', compact('activities'));
+    }
+    
     public function create()
     {
         $programs = Program::where('coach_id', Auth::id())->get();
