@@ -50,7 +50,7 @@
                                 <span class="text-gray-700">{{ $program->duration }} semaines</span>
                             </div>
 
-                            <form action="{{ route('programs.assign', $program) }}" method="POST" class="mt-4">
+                            <form action="{{ route('programs.enroll', $program) }}" method="POST" class="mt-4">
                                 @csrf
                                 <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
                                     Commencer ce programme
