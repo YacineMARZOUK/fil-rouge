@@ -30,19 +30,30 @@ class ProductController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'price' => 'required|numeric|min:0',
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'stock' => 'required|integer|min:0',
+                'quantity' => 'required|integer|min:0',
                 'type' => 'required|in:nutrition,accessoire,vetement'
             ]);
 
             if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
-                $path = $image->storeAs('products', $filename, 'public');
-                $validated['image'] = $path;
+                try {
+                    $image = $request->file('image');
+                    $filename = Str::slug($validated['title']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+                    
+                    // Vérifier si le dossier existe, sinon le créer
+                    if (!Storage::disk('public')->exists('products')) {
+                        Storage::disk('public')->makeDirectory('products');
+                    }
+                    
+                    $path = $image->storeAs('products', $filename, 'public');
+                    $validated['image'] = $path;
+                } catch (\Exception $e) {
+                    return back()->withInput()
+                        ->with('error', 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage());
+                }
             }
 
             Product::create($validated);
@@ -51,7 +62,7 @@ class ProductController extends Controller
                 ->with('success', 'Produit ajouté avec succès.');
         } catch (\Exception $e) {
             return back()->withInput()
-                ->with('error', 'Une erreur est survenue lors de l\'ajout du produit. Veuillez réessayer.');
+                ->with('error', 'Erreur : ' . $e->getMessage());
         }
     }
 } 

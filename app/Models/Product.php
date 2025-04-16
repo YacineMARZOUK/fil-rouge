@@ -15,16 +15,12 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'title',
         'description',
+        'type',
         'price',
-        'old_price',
-        'category',
-        'image',
-        'stock',
-        'is_new',
-        'is_featured',
-        'type'
+        'quantity',
+        'image'
     ];
 
     /**
@@ -34,10 +30,7 @@ class Product extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
-        'old_price' => 'decimal:2',
-        'is_new' => 'boolean',
-        'is_featured' => 'boolean',
-        'stock' => 'integer'
+        'quantity' => 'integer'
     ];
 
     /**

@@ -17,9 +17,9 @@
             <div class="card">
                 <div class="space-y-4">
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-400 mb-1">Nom du produit</label>
-                        <input type="text" name="name" id="name" class="input-field w-full @error('name') border-red-500 @enderror" value="{{ old('name') }}" required>
-                        @error('name')
+                        <label for="title" class="block text-sm font-medium text-gray-400 mb-1">Nom du produit</label>
+                        <input type="text" name="title" id="title" class="input-field w-full @error('title') border-red-500 @enderror" value="{{ old('title') }}" required>
+                        @error('title')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -54,9 +54,9 @@
                     </div>
 
                     <div>
-                        <label for="stock" class="block text-sm font-medium text-gray-400 mb-1">Stock</label>
-                        <input type="number" name="stock" id="stock" min="0" class="input-field w-full @error('stock') border-red-500 @enderror" value="{{ old('stock') }}" required>
-                        @error('stock')
+                        <label for="quantity" class="block text-sm font-medium text-gray-400 mb-1">Quantité</label>
+                        <input type="number" name="quantity" id="quantity" min="0" class="input-field w-full @error('quantity') border-red-500 @enderror" value="{{ old('quantity') }}" required>
+                        @error('quantity')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
