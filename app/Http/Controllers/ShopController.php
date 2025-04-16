@@ -7,16 +7,9 @@ use Illuminate\Http\Request;
 
 class ShopController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Product::query();
-
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
-        }
-
-        $products = $query->paginate(12);
-
+        $products = Product::orderBy('created_at', 'desc')->get();
         return view('shop.index', compact('products'));
     }
 
