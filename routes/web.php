@@ -54,6 +54,5 @@ Route::get('/contact', function () {
 // Routes pour l'administrateur
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('products.create');
-    Route::post('/products', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('products.store');
+    Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
 });
