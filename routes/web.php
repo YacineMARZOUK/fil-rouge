@@ -6,6 +6,7 @@ use App\Http\Controllers\CoachController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,11 +41,19 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('activities', App\Http\Controllers\Coach\ActivityController::class);
         Route::resource('user-goals', App\Http\Controllers\Coach\UserGoalController::class);
     });
+
+    // Routes du panier
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+    Route::put('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 });
 
 // Routes de la boutique
 Route::get('/boutique', [App\Http\Controllers\Shop\ShopController::class, 'index'])->name('shop');
 Route::get('/boutique/{product}', [App\Http\Controllers\Shop\ShopController::class, 'show'])->name('shop.show');
+Route::post('/boutique/{product}/add-to-cart', [App\Http\Controllers\Shop\ShopController::class, 'addToCart'])->name('shop.addToCart');
 
 // Route de contact
 Route::get('/contact', function () {

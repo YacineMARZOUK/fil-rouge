@@ -23,7 +23,7 @@
             </div>
             <div class="mb-4">
                 <label for="quantity" class="block text-sm font-medium text-gray-400 mb-1">Quantité</label>
-                <input type="number" id="modalQuantity" class="input-field w-full" value="1" min="1">
+                <input type="number" id="modalQuantity" class="input-field w-full" value="1" min="1" max="10">
             </div>
         </div>
         <div class="flex justify-end gap-2">
@@ -75,7 +75,7 @@
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            <span id="cartCount">{{ Auth::user()->cartItems()->sum('quantity') }}</span>
+            <span id="cartCount">{{ Auth::user()->cartItems()->count() }}</span>
         </a>
         @endauth
     </div>
@@ -118,7 +118,7 @@
                 </div>
                 @else
                 <div class="mt-4">
-                    <button onclick="openModal({{ $product->id }}, '{{ $product->title }}', '{{ number_format($product->price, 2, ',', ' ') }}', '{{ asset('storage/' . $product->image) }}')" 
+                    <button onclick="openModal({{ $product->id }}, '{{ $product->title }}', '{{ $product->price }}', '{{ asset('storage/' . $product->image) }}')" 
                             class="btn-primary w-full">
                         Ajouter au panier
                     </button>
@@ -157,14 +157,13 @@ function closeModal() {
 function addToCart() {
     const quantity = document.getElementById('modalQuantity').value;
     
-    fetch('{{ route('cart.store') }}', {
+    fetch(`/boutique/${currentProductId}/add-to-cart`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
         body: JSON.stringify({
-            product_id: currentProductId,
             quantity: quantity
         })
     })

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -15,7 +16,7 @@ class CartController extends Controller
 
     public function index()
     {
-        $cartItems = CartItem::where('user_id', auth()->id())
+        $cartItems = CartItem::where('user_id', Auth::id())
             ->with('product')
             ->get();
 
@@ -24,79 +25,62 @@ class CartController extends Controller
         return view('cart.index', compact('cartItems', 'total'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Product $product)
     {
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:10'
         ]);
 
-        $product = Product::findOrFail($validated['product_id']);
-        
-        // Vérifier si le produit est déjà dans le panier
-        $cartItem = CartItem::where('user_id', auth()->id())
-            ->where('product_id', $product->id)
-            ->first();
+        $totalPrice = $product->price * $request->quantity;
 
-        if ($cartItem) {
-            // Mettre à jour la quantité et le prix total
-            $cartItem->quantity += $validated['quantity'];
-            $cartItem->total_price = $cartItem->quantity * $product->price;
-            $cartItem->save();
-        } else {
-            // Créer un nouvel élément dans le panier
-            CartItem::create([
-                'user_id' => auth()->id(),
-                'product_id' => $product->id,
-                'quantity' => $validated['quantity'],
-                'total_price' => $validated['quantity'] * $product->price
-            ]);
-        }
+        CartItem::create([
+            'user_id' => Auth::id(),
+            'product_id' => $product->id,
+            'quantity' => $request->quantity,
+            'total_price' => $totalPrice
+        ]);
 
         return response()->json([
             'message' => 'Produit ajouté au panier',
-            'cart_count' => CartItem::where('user_id', auth()->id())->sum('quantity')
+            'cart_count' => Auth::user()->cartItems()->sum('quantity')
         ]);
+    }
+
+    public function update(Request $request, CartItem $cartItem)
+    {
+        $request->validate([
+            'quantity' => 'required|integer|min:1|max:10'
+        ]);
+
+        if ($cartItem->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $totalPrice = $cartItem->product->price * $request->quantity;
+
+        $cartItem->update([
+            'quantity' => $request->quantity,
+            'total_price' => $totalPrice
+        ]);
+
+        return redirect()->route('cart.index')->with('success', 'Quantité mise à jour');
     }
 
     public function destroy(CartItem $cartItem)
     {
-        if ($cartItem->user_id !== auth()->id()) {
+        if ($cartItem->user_id !== Auth::id()) {
             abort(403);
         }
 
         $cartItem->delete();
 
-        return redirect()->route('cart.index')
-            ->with('success', 'Produit retiré du panier');
+        return redirect()->route('cart.index')->with('success', 'Produit retiré du panier');
     }
 
     public function clear()
     {
-        CartItem::where('user_id', auth()->id())->delete();
+        CartItem::where('user_id', Auth::id())->delete();
 
-        return redirect()->route('cart.index')
-            ->with('success', 'Panier vidé avec succès');
-    }
-
-    public function update(Request $request, CartItem $cartItem)
-    {
-        if ($cartItem->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'quantity' => 'required|integer|min:1'
-        ]);
-
-        $cartItem->quantity = $validated['quantity'];
-        $cartItem->total_price = $cartItem->quantity * $cartItem->product->price;
-        $cartItem->save();
-
-        return response()->json([
-            'message' => 'Quantité mise à jour',
-            'total_price' => number_format($cartItem->total_price, 2, ',', ' ') . ' €',
-            'cart_total' => number_format(CartItem::where('user_id', auth()->id())->sum('total_price'), 2, ',', ' ') . ' €'
-        ]);
+        return redirect()->route('cart.index')->with('success', 'Panier vidé');
     }
 } 

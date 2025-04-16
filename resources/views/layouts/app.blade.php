@@ -70,6 +70,20 @@
             }
         }
     </style>
+    <style>
+        .fixed {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .bg-red-500 {
+            background-color: #ef4444;
+        }
+        .bg-green-500 {
+            background-color: #10b981;
+        }
+        .text-white {
+            color: #ffffff;
+        }
+    </style>
     @stack('styles')
 </head>
 <body>
@@ -118,6 +132,17 @@
                         <a href="{{ route('login') }}" class="nav-link">Connexion</a>
                         <a href="{{ route('register') }}" class="btn-primary">Inscription</a>
                     @endauth
+                    @auth
+                        <a href="{{ route('cart.index') }}" class="text-gray-700 hover:text-primary relative">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="ml-1">Panier</span>
+                            @if($count > 0)
+                                <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                    {{ $count }}
+                                </span>
+                            @endif
+                        </a>
+                    @endauth
                 </div>
                 
                 <!-- Mobile Menu Button -->
@@ -161,6 +186,15 @@
 
     <!-- Main Content avec padding-top pour la navbar fixe -->
     <main class="pt-20">
+        @if($errors->any())
+            <div class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         @yield('content')
     </main>
 
@@ -230,6 +264,16 @@
             if (window.innerWidth >= 768) {
                 document.getElementById('mobile-menu').classList.add('hidden');
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.fixed');
+            messages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => message.remove(), 500);
+                }, 3000);
+            });
         });
     </script>
     @stack('scripts')
