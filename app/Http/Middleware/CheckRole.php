@@ -4,21 +4,24 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, ...$roles)
+    public function handle(Request $request, Closure $next, $role)
     {
-        if (!$request->user()) {
+        if (!Auth::check()) {
             return redirect()->route('login');
         }
 
-        foreach ($roles as $role) {
-            if ($request->user()->role === $role) {
-                return $next($request);
+        if (Auth::user()->role !== $role) {
+            if (Auth::user()->role === 'coach') {
+                return redirect()->route('coach.dashboard');
+            } else {
+                return redirect()->route('shop');
             }
         }
 
-        return redirect()->route('home')->with('error', 'Accès non autorisé');
+        return $next($request);
     }
 } 

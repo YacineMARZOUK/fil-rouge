@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'showLoginForm', 'showRegistrationForm']]);
+        $this->middleware('guest')->except('logout');
     }
 
     public function showLoginForm()
@@ -27,51 +27,61 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string|min:6',
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Redirection selon le rôle
+            if (Auth::user()->role === 'coach') {
+                return redirect()->route('coach.dashboard');
+            } else {
+                return redirect()->route('shop');
+            }
         }
 
-        if (!$token = auth()->attempt($validator->validated())) {
-            return redirect()->back()->withErrors(['email' => 'Identifiants invalides'])->withInput();
-        }
-
-        return redirect()->intended('/coach/dashboard');
+        return back()->withErrors([
+            'email' => 'Les identifiants fournis ne correspondent pas à nos enregistrements.',
+        ])->onlyInput('email');
     }
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|confirmed|min:6',
-            'role' => 'required|in:admin,coach,user',
-            'phone' => 'nullable|string',
-            'address' => 'nullable|string',
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:user,coach'],
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+        ]);
+
+        Auth::guard('web')->login($user);
+
+        // Redirection selon le rôle
+        if ($user->role === 'coach') {
+            return redirect()->route('coach.dashboard');
+        } else {
+            return redirect()->route('shop');
         }
-
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => Hash::make($request->password)]
-        ));
-
-        auth()->login($user);
-
-        return redirect()->intended('/login');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        auth()->logout();
-        return redirect('/');
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
     }
 
     public function refresh()

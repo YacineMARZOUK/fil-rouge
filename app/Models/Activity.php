@@ -19,18 +19,20 @@ class Activity extends Model
     protected $fillable = [
         'name',
         'description',
-        'program_id',
         'date',
+        'duration',
         'location',
         'max_participants',
-        'duration',
-        'equipment'
+        'price',
+        'program_id',
+        'coach_id'
     ];
 
     protected $casts = [
         'date' => 'datetime',
         'max_participants' => 'integer',
-        'duration' => 'integer'
+        'duration' => 'integer',
+        'price' => 'decimal:2'
     ];
 
     public function program()
@@ -46,7 +48,8 @@ class Activity extends Model
     public function participants()
     {
         return $this->belongsToMany(User::class, 'activity_participants')
-                    ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot('status');
     }
 
     public function getDateFormattedAttribute()

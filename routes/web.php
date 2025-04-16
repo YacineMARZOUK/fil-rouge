@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CoachController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\ActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,12 +29,16 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
+    // Route du profil
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile');
+    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
     // Routes pour les coachs
-    Route::prefix('coach')->name('coach.')->group(function () {
+    Route::middleware(['role:coach'])->prefix('coach')->name('coach.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Coach\DashboardController::class, 'index'])->name('dashboard');
-        
+    
         // Routes pour les programmes
-        Route::resource('programs', App\Http\Controllers\Coach\ProgramController::class);
+        Route::resource('programs', ProgramController::class);
         
         // Routes pour les activités
         Route::resource('activities', App\Http\Controllers\Coach\ActivityController::class);
@@ -42,5 +49,17 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Routes de la boutique
-Route::get('/boutique', [App\Http\Controllers\ShopController::class, 'index'])->name('shop.index');
-Route::get('/boutique/{product}', [App\Http\Controllers\ShopController::class, 'show'])->name('shop.show');
+Route::get('/boutique', [App\Http\Controllers\Shop\ShopController::class, 'index'])->name('shop');
+Route::get('/boutique/{product}', [App\Http\Controllers\Shop\ShopController::class, 'show'])->name('shop.show');
+
+// Route de contact
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// Routes pour l'administrateur
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/products/create', [App\Http\Controllers\Admin\ProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [App\Http\Controllers\Admin\ProductController::class, 'store'])->name('products.store');
+});

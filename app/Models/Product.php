@@ -9,32 +9,57 @@ class Product extends Model
 {
     use HasFactory;
 
+    /**
+     * Les attributs qui sont mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'title',
+        'name',
         'description',
-        'type',
         'price',
-        'quantity',
-        'image'
+        'old_price',
+        'category',
+        'image',
+        'stock',
+        'is_new',
+        'is_featured'
     ];
 
+    /**
+     * Les attributs qui doivent être castés.
+     *
+     * @var array<string, string>
+     */
     protected $casts = [
         'price' => 'decimal:2',
-        'quantity' => 'integer'
+        'old_price' => 'decimal:2',
+        'is_new' => 'boolean',
+        'is_featured' => 'boolean',
     ];
 
+    /**
+     * Obtenir le prix formaté avec le symbole de l'euro
+     */
     public function getFormattedPriceAttribute()
     {
         return number_format($this->price, 2, ',', ' ') . ' €';
     }
 
-    public function getTypeLabelAttribute()
+    /**
+     * Obtenir l'ancien prix formaté avec le symbole de l'euro
+     */
+    public function getFormattedOldPriceAttribute()
     {
-        return match($this->type) {
-            'nutrition' => 'Nutrition',
-            'vetement' => 'Vêtement',
-            'accessoire' => 'Accessoire',
-            default => 'Inconnu'
-        };
+        return $this->old_price ? number_format($this->old_price, 2, ',', ' ') . ' €' : null;
+    }
+
+    /**
+     * Calculer le pourcentage de réduction
+     */
+    public function getDiscountPercentageAttribute()
+    {
+        if (!$this->old_price) return null;
+        return round((($this->old_price - $this->price) / $this->old_price) * 100);
     }
 } 
