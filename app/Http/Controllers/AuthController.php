@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -32,11 +33,13 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::guard('web')->attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirection selon le rôle
-            if (Auth::user()->role === 'coach') {
+            // Redirection en fonction du rôle
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            } elseif (Auth::user()->role === 'coach') {
                 return redirect()->route('coach.dashboard');
             } else {
                 return redirect()->route('shop');
@@ -53,8 +56,8 @@ class AuthController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['required', 'in:user,coach'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+            'role' => ['required', 'in:client,coach'],
         ]);
 
         $user = User::create([
@@ -64,23 +67,16 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
-        Auth::guard('web')->login($user);
+        Auth::login($user);
 
-        // Redirection selon le rôle
-        if ($user->role === 'coach') {
-            return redirect()->route('coach.dashboard');
-        } else {
-            return redirect()->route('shop');
-        }
+        return redirect()->route('shop');
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
-
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
         return redirect()->route('home');
     }
 

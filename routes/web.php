@@ -36,14 +36,8 @@ Route::middleware(['auth'])->group(function () {
     // Routes pour les coachs
     Route::middleware(['role:coach'])->prefix('coach')->name('coach.')->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Coach\DashboardController::class, 'index'])->name('dashboard');
-    
-        // Routes pour les programmes
-        Route::resource('programs', ProgramController::class);
-        
-        // Routes pour les activités
+        Route::resource('programs', App\Http\Controllers\Coach\ProgramController::class);
         Route::resource('activities', App\Http\Controllers\Coach\ActivityController::class);
-        
-        // Routes pour les objectifs utilisateur
         Route::resource('user-goals', App\Http\Controllers\Coach\UserGoalController::class);
     });
 });

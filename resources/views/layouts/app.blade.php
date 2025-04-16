@@ -39,7 +39,7 @@
     </script>
     <style type="text/tailwindcss">
         @layer base {
-            body {
+        body {
                 @apply bg-dark text-light font-['Inter'];
             }
         }
@@ -150,7 +150,7 @@
                                 Déconnexion
                             </button>
                         </form>
-                    @else
+                @else
                         <a href="{{ route('login') }}" class="nav-link">Connexion</a>
                         <a href="{{ route('register') }}" class="btn-primary inline-block">Inscription</a>
                     @endauth

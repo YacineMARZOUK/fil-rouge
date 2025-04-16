@@ -23,7 +23,8 @@ class Product extends Model
         'image',
         'stock',
         'is_new',
-        'is_featured'
+        'is_featured',
+        'type'
     ];
 
     /**
@@ -36,6 +37,7 @@ class Product extends Model
         'old_price' => 'decimal:2',
         'is_new' => 'boolean',
         'is_featured' => 'boolean',
+        'stock' => 'integer'
     ];
 
     /**

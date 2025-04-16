@@ -5,6 +5,12 @@
     <div class="max-w-2xl mx-auto">
         <h1 class="text-3xl font-bold mb-8">Ajouter un nouveau produit</h1>
 
+        @if(session('error'))
+            <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
@@ -14,6 +20,19 @@
                         <label for="name" class="block text-sm font-medium text-gray-400 mb-1">Nom du produit</label>
                         <input type="text" name="name" id="name" class="input-field w-full @error('name') border-red-500 @enderror" value="{{ old('name') }}" required>
                         @error('name')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-400 mb-1">Type de produit</label>
+                        <select name="type" id="type" class="input-field w-full @error('type') border-red-500 @enderror" required>
+                            <option value="">Sélectionnez un type</option>
+                            @foreach($types as $value => $label)
+                                <option value="{{ $value }}" {{ old('type') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -45,6 +64,7 @@
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-400 mb-1">Image du produit</label>
                         <input type="file" name="image" id="image" accept="image/*" class="input-field w-full @error('image') border-red-500 @enderror" required>
+                        <p class="text-sm text-gray-400 mt-1">Format accepté : JPEG, PNG, JPG, GIF. Taille maximale : 2MB</p>
                         @error('image')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
