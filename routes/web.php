@@ -46,10 +46,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Routes du panier
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
     Route::put('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
-    Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
 
     // Routes du checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');

@@ -39,7 +39,7 @@
     </script>
     <style type="text/tailwindcss">
         @layer base {
-        body {
+            body {
                 @apply bg-dark text-light font-['Inter'];
             }
         }
@@ -71,42 +71,68 @@
         }
     </style>
     <style>
-        .fixed {
+        .message-alert {
             transition: opacity 0.5s ease-in-out;
         }
-        .bg-red-500 {
-            background-color: #ef4444;
+        
+        /* Styles spécifiques pour la navbar */
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        .bg-green-500 {
-            background-color: #10b981;
+
+        /* Style pour le menu déroulant */
+        .dropdown-menu {
+            background-color: rgba(17, 24, 39, 0.95);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .text-white {
-            color: #ffffff;
+
+        /* Assurer que le contenu principal commence après la navbar */
+        main {
+            padding-top: 5rem;
+        }
+
+        /* Styles pour le menu mobile */
+        #mobile-menu {
+            background-color: rgba(0, 0, 0, 0.95);
         }
     </style>
     @stack('styles')
 </head>
-<body>
+<body class="min-h-screen">
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-dark bg-opacity-90 backdrop-blur-sm">
+    <nav class="navbar-fixed">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
-                <a href="{{ route('home') }}" class="text-2xl font-bold">
+                <a href="{{ route('home') }}" class="text-2xl font-bold z-50">
                     <span class="text-white">GAIN</span><span class="text-primary">ZONE</span>
                 </a>
                 
                 <!-- Navigation Links - Desktop -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
                     @auth
-                        @if(auth()->user()->role === 'coach')
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link">Tableau de bord</a>
+                            <a href="{{ route('admin.products.index') }}" class="nav-link">Produits</a>
+                            <a href="{{ route('admin.users.index') }}" class="nav-link">Utilisateurs</a>
+                        @elseif(auth()->user()->role === 'coach')
+                            <a href="{{ route('coach.dashboard') }}" class="nav-link">Tableau de bord</a>
                             <a href="{{ route('coach.programs.index') }}" class="nav-link">Programmes</a>
                             <a href="{{ route('coach.activities.index') }}" class="nav-link">Activités</a>
+                        @else
+                            <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
+                            <a href="{{ route('cart.index') }}" class="nav-link">Panier</a>
                         @endif
-                    @endauth
-                    <a href="{{ route('contact') }}" class="nav-link">Contact</a>
-                    @auth
+                        <a href="{{ route('contact') }}" class="nav-link">Contact</a>
+
+                        <!-- User Menu -->
                         <div class="relative group">
                             <button class="nav-link flex items-center">
                                 Mon Compte
@@ -114,12 +140,20 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
-                            <div class="absolute right-0 mt-2 w-48 bg-gray-900 rounded-lg shadow-xl py-2 hidden group-hover:block">
+                            <div class="absolute right-0 mt-2 w-48 dropdown-menu rounded-lg shadow-xl py-2 hidden group-hover:block">
                                 <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm nav-link">Profil</a>
-                                @if(auth()->user()->role === 'coach')
+                                
+                                @if(auth()->user()->role === 'admin')
+                                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm nav-link">Tableau de bord</a>
+                                    <a href="{{ route('admin.products.index') }}" class="block px-4 py-2 text-sm nav-link">Gérer les produits</a>
+                                    <a href="{{ route('admin.users.index') }}" class="block px-4 py-2 text-sm nav-link">Gérer les utilisateurs</a>
+                                @elseif(auth()->user()->role === 'coach')
                                     <a href="{{ route('coach.dashboard') }}" class="block px-4 py-2 text-sm nav-link">Tableau de bord</a>
                                     <a href="{{ route('coach.activities.create') }}" class="block px-4 py-2 text-sm nav-link">Ajouter une activité</a>
+                                @else
+                                    <a href="{{ route('cart.index') }}" class="block px-4 py-2 text-sm nav-link">Mon panier</a>
                                 @endif
+
                                 <form method="POST" action="{{ route('logout') }}" class="block">
                                     @csrf
                                     <button type="submit" class="w-full text-left px-4 py-2 text-sm nav-link">
@@ -129,53 +163,48 @@
                             </div>
                         </div>
                     @else
+                        <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
+                        <a href="{{ route('contact') }}" class="nav-link">Contact</a>
                         <a href="{{ route('login') }}" class="nav-link">Connexion</a>
                         <a href="{{ route('register') }}" class="btn-primary">Inscription</a>
                     @endauth
-                    @auth
-                        <a href="{{ route('cart.index') }}" class="text-gray-700 hover:text-primary relative">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="ml-1">Panier</span>
-                            @if($count > 0)
-                                <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                    {{ $count }}
-                                </span>
-                            @endif
-                        </a>
-                    @endauth
                 </div>
-                
+
                 <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-white">
+                <button id="mobile-menu-button" class="md:hidden text-gray-300 hover:text-white z-50">
                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
-            
+
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="md:hidden hidden pb-4">
                 <div class="flex flex-col space-y-4">
-                    <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
                     @auth
-                        @if(auth()->user()->role === 'coach')
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="nav-link">Tableau de bord</a>
+                            <a href="{{ route('admin.products.index') }}" class="nav-link">Produits</a>
+                            <a href="{{ route('admin.users.index') }}" class="nav-link">Utilisateurs</a>
+                        @elseif(auth()->user()->role === 'coach')
+                            <a href="{{ route('coach.dashboard') }}" class="nav-link">Tableau de bord</a>
                             <a href="{{ route('coach.programs.index') }}" class="nav-link">Programmes</a>
                             <a href="{{ route('coach.activities.index') }}" class="nav-link">Activités</a>
+                        @else
+                            <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
+                            <a href="{{ route('cart.index') }}" class="nav-link">Panier</a>
                         @endif
-                    @endauth
-                    <a href="{{ route('contact') }}" class="nav-link">Contact</a>
-                    @auth
+                        <a href="{{ route('contact') }}" class="nav-link">Contact</a>
                         <a href="{{ route('profile') }}" class="nav-link">Profil</a>
-                        @if(auth()->user()->role === 'coach')
-                            <a href="{{ route('coach.dashboard') }}" class="nav-link">Tableau de bord</a>
-                        @endif
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="nav-link w-full text-left">
                                 Déconnexion
                             </button>
                         </form>
-                @else
+                    @else
+                        <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
+                        <a href="{{ route('contact') }}" class="nav-link">Contact</a>
                         <a href="{{ route('login') }}" class="nav-link">Connexion</a>
                         <a href="{{ route('register') }}" class="btn-primary inline-block">Inscription</a>
                     @endauth
@@ -184,10 +213,10 @@
         </div>
     </nav>
 
-    <!-- Main Content avec padding-top pour la navbar fixe -->
-    <main class="pt-20">
+    <!-- Main Content -->
+    <main>
         @if($errors->any())
-            <div class="fixed top-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
+            <div class="message-alert fixed top-24 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
                 <ul>
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -255,8 +284,11 @@
     <!-- Scripts -->
     <script>
         // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
         
         // Hide mobile menu on window resize
@@ -266,8 +298,9 @@
             }
         });
 
+        // Modifier le script pour cibler uniquement les messages d'alerte
         document.addEventListener('DOMContentLoaded', function() {
-            const messages = document.querySelectorAll('.fixed');
+            const messages = document.querySelectorAll('.message-alert');
             messages.forEach(message => {
                 setTimeout(() => {
                     message.style.opacity = '0';
