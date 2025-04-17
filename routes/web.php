@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,12 +50,17 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
     Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+    // Routes du checkout
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 });
 
 // Routes de la boutique
 Route::get('/boutique', [App\Http\Controllers\Shop\ShopController::class, 'index'])->name('shop');
 Route::get('/boutique/{product}', [App\Http\Controllers\Shop\ShopController::class, 'show'])->name('shop.show');
-Route::post('/boutique/{product}/add-to-cart', [App\Http\Controllers\Shop\ShopController::class, 'addToCart'])->name('shop.addToCart');
+Route::post('/boutique/add-to-cart/{product}', [App\Http\Controllers\Shop\ShopController::class, 'addToCart'])->name('shop.addToCart');
 
 // Route de contact
 Route::get('/contact', function () {
@@ -64,4 +71,5 @@ Route::get('/contact', function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', App\Http\Controllers\Admin\ProductController::class);
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
 });

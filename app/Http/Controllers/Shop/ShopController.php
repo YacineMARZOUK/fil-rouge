@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only(['addToCart']);
+    }
+
     /**
      * Affiche la liste des produits
      */
@@ -57,22 +62,49 @@ class ShopController extends Controller
 
     public function addToCart(Request $request, Product $product)
     {
-        $request->validate([
-            'quantity' => 'required|integer|min:1|max:10'
-        ]);
+        try {
+            $request->validate([
+                'quantity' => 'required|integer|min:1|max:10'
+            ]);
 
-        $totalPrice = $product->price * $request->quantity;
+            // Vérifier si le produit est en stock
+            if ($product->quantity < $request->quantity) {
+                return response()->json([
+                    'message' => 'Stock insuffisant'
+                ], 422);
+            }
 
-        CartItem::create([
-            'user_id' => Auth::id(),
-            'product_id' => $product->id,
-            'quantity' => $request->quantity,
-            'total_price' => $totalPrice
-        ]);
+            $totalPrice = $product->price * $request->quantity;
 
-        return response()->json([
-            'message' => 'Produit ajouté au panier',
-            'cart_count' => Auth::user()->cartItems()->sum('quantity')
-        ]);
+            // Vérifier si le produit existe déjà dans le panier
+            $cartItem = CartItem::where('user_id', Auth::id())
+                ->where('product_id', $product->id)
+                ->first();
+
+            if ($cartItem) {
+                // Mettre à jour la quantité
+                $cartItem->update([
+                    'quantity' => $cartItem->quantity + $request->quantity,
+                    'total_price' => $cartItem->total_price + $totalPrice
+                ]);
+            } else {
+                // Créer un nouvel élément dans le panier
+                CartItem::create([
+                    'user_id' => Auth::id(),
+                    'product_id' => $product->id,
+                    'quantity' => $request->quantity,
+                    'total_price' => $totalPrice
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Produit ajouté au panier',
+                'cart_count' => Auth::user()->cartItems()->sum('quantity')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur est survenue'
+            ], 500);
+        }
     }
 } 

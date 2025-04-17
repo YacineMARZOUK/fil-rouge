@@ -11,7 +11,14 @@
 
 <!-- Modal d'ajout au panier -->
 <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-dark border border-gray-700 rounded-lg p-6 max-w-md w-full mx-4">
+    <div class="bg-dark border border-gray-700 rounded-lg p-6 max-w-md w-full mx-4 relative">
+        <!-- Bouton de fermeture -->
+        <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
         <h3 class="text-xl font-bold mb-4">Ajouter au panier</h3>
         <div class="mb-4">
             <div class="flex items-center gap-4 mb-4">
@@ -27,7 +34,7 @@
             </div>
         </div>
         <div class="flex justify-end gap-2">
-            <button onclick="closeModal()" class="btn-secondary">
+            <button onclick="closeModal()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
                 Annuler
             </button>
             <button onclick="addToCart()" class="btn-primary">
@@ -118,8 +125,11 @@
                 </div>
                 @else
                 <div class="mt-4">
-                    <button onclick="openModal({{ $product->id }}, '{{ $product->title }}', '{{ $product->price }}', '{{ asset('storage/' . $product->image) }}')" 
-                            class="btn-primary w-full">
+                    <button onclick="openModal({{ $product->id }}, '{{ $product->title }}', '{{ number_format($product->price, 2, ',', ' ') }}', '{{ asset('storage/' . $product->image) }}')" 
+                            class="btn-primary w-full flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
                         Ajouter au panier
                     </button>
                 </div>
@@ -138,6 +148,7 @@
 @push('scripts')
 <script>
 let currentProductId = null;
+let isProcessing = false;
 
 function openModal(productId, title, price, image) {
     currentProductId = productId;
@@ -145,19 +156,73 @@ function openModal(productId, title, price, image) {
     document.getElementById('modalProductPrice').textContent = price + ' €';
     document.getElementById('modalProductImage').src = image;
     document.getElementById('modalQuantity').value = 1;
-    document.getElementById('cartModal').classList.remove('hidden');
-    document.getElementById('cartModal').classList.add('flex');
+    
+    const modal = document.getElementById('cartModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Ajouter une classe au body au lieu de modifier overflow
+    document.body.classList.add('modal-open');
 }
 
 function closeModal() {
-    document.getElementById('cartModal').classList.add('hidden');
-    document.getElementById('cartModal').classList.remove('flex');
+    const modal = document.getElementById('cartModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    
+    // Retirer la classe du body
+    document.body.classList.remove('modal-open');
+    
+    // Réinitialiser l'état
+    setTimeout(() => {
+        isProcessing = false;
+    }, 300);
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'} text-white px-6 py-3 rounded-lg shadow-lg z-50 transition-opacity duration-500`;
+    
+    const icon = type === 'success' 
+        ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />'
+        : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                ${icon}
+            </svg>
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 500);
+    }, 3000);
 }
 
 function addToCart() {
-    const quantity = document.getElementById('modalQuantity').value;
+    if (isProcessing) return;
     
-    fetch(`/boutique/${currentProductId}/add-to-cart`, {
+    isProcessing = true;
+    const quantity = document.getElementById('modalQuantity').value;
+    const submitButton = document.querySelector('[onclick="addToCart()"]');
+    const originalText = submitButton.innerHTML;
+    
+    // Désactiver le bouton et montrer un indicateur de chargement
+    submitButton.disabled = true;
+    submitButton.innerHTML = `
+        <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Ajout en cours...
+    `;
+    
+    fetch(`/boutique/add-to-cart/${currentProductId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -167,25 +232,66 @@ function addToCart() {
             quantity: quantity
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur réseau');
+        }
+        return response.json();
+    })
     .then(data => {
         document.getElementById('cartCount').textContent = data.cart_count;
         closeModal();
-        // Afficher une notification de succès
-        alert(data.message);
+        showNotification(data.message, 'success');
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Une erreur est survenue');
+        showNotification('Une erreur est survenue lors de l\'ajout au panier', 'error');
+    })
+    .finally(() => {
+        // Réactiver le bouton et restaurer son texte
+        submitButton.disabled = false;
+        submitButton.innerHTML = originalText;
+        isProcessing = false;
     });
 }
 
-// Fermer le modal si on clique en dehors
+// Gestionnaire de clic en dehors du modal
 document.getElementById('cartModal').addEventListener('click', function(e) {
-    if (e.target === this) {
+    if (e.target === this && !isProcessing) {
         closeModal();
+    }
+});
+
+// Gestionnaire de touche Echap
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !document.getElementById('cartModal').classList.contains('hidden') && !isProcessing) {
+        closeModal();
+    }
+});
+
+// Gestionnaire de touche Entrée pour la quantité
+document.getElementById('modalQuantity').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        if (!isProcessing) {
+            addToCart();
+        }
     }
 });
 </script>
 @endpush
+
+<style>
+/* Ajouter ces styles dans la section head ou dans votre fichier CSS */
+.modal-open {
+    overflow: hidden;
+    padding-right: 15px; /* Pour compenser la barre de défilement */
+}
+
+/* Style pour le conteneur du modal pour permettre le défilement si nécessaire */
+#cartModal > div {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+</style>
 @endsection 

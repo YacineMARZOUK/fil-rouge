@@ -3,83 +3,126 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold">Tableau de bord Administrateur</h1>
+        <h1 class="text-3xl font-bold">Tableau de bord administrateur</h1>
         <a href="{{ route('admin.products.create') }}" class="btn-primary flex items-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
             Nouveau Produit
         </a>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <!-- Carte des utilisateurs -->
-        <div class="card bg-dark border border-gray-700">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Total Utilisateurs</p>
-                        <h3 class="text-2xl font-bold text-primary">{{ $stats['total_users'] }}</h3>
-                    </div>
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                </div>
+    <!-- Statistiques -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="card">
+            <h3 class="text-xl font-semibold mb-2">Utilisateurs</h3>
+            <p class="text-4xl font-bold text-primary">{{ $stats['total_users'] }}</p>
+            <div class="mt-2 text-gray-400">
+                <span>Clients: {{ $stats['total_clients'] }}</span>
+                <span class="ml-4">Coachs: {{ $stats['total_coaches'] }}</span>
             </div>
         </div>
+        
+        <div class="card">
+            <h3 class="text-xl font-semibold mb-2">Produits</h3>
+            <p class="text-4xl font-bold text-primary">{{ $stats['total_products'] }}</p>
+        </div>
+        
+        <div class="card">
+            <h3 class="text-xl font-semibold mb-2">Commandes</h3>
+            <p class="text-4xl font-bold text-primary">{{ $stats['total_orders'] }}</p>
+        </div>
+    </div>
 
-        <!-- Carte des coachs -->
-        <div class="card bg-dark border border-gray-700">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Total Coachs</p>
-                        <h3 class="text-2xl font-bold text-primary">{{ $stats['total_coaches'] }}</h3>
-                    </div>
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                    </div>
-                </div>
+    <!-- Commandes récentes -->
+    <div class="card mb-8">
+        <h2 class="text-2xl font-bold mb-4">Commandes récentes</h2>
+        @if($stats['recent_orders']->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-b border-gray-800">
+                            <th class="text-left py-3 px-4">ID</th>
+                            <th class="text-left py-3 px-4">Client</th>
+                            <th class="text-left py-3 px-4">Montant</th>
+                            <th class="text-left py-3 px-4">Date</th>
+                            <th class="text-left py-3 px-4">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($stats['recent_orders'] as $order)
+                            <tr class="border-b border-gray-800">
+                                <td class="py-3 px-4">#{{ $order->id }}</td>
+                                <td class="py-3 px-4">{{ $order->user->name }}</td>
+                                <td class="py-3 px-4">{{ number_format($order->total_amount, 2) }} €</td>
+                                <td class="py-3 px-4">{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded text-xs 
+                                        @if($order->status === 'completed') bg-green-600
+                                        @elseif($order->status === 'pending') bg-yellow-600
+                                        @else bg-red-600 @endif">
+                                        {{ ucfirst($order->status) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div>
+        @else
+            <p class="text-gray-400">Aucune commande récente</p>
+        @endif
+    </div>
 
-        <!-- Carte des programmes -->
-        <div class="card bg-dark border border-gray-700">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Total Programmes</p>
-                        <h3 class="text-2xl font-bold text-primary">{{ $stats['total_programs'] }}</h3>
-                    </div>
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                        </svg>
-                    </div>
-                </div>
+    <!-- Nouveaux utilisateurs -->
+    <div class="card">
+        <h2 class="text-2xl font-bold mb-4">Nouveaux utilisateurs</h2>
+        @if($stats['recent_users']->count() > 0)
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-b border-gray-800">
+                            <th class="text-left py-3 px-4">Nom</th>
+                            <th class="text-left py-3 px-4">Email</th>
+                            <th class="text-left py-3 px-4">Rôle</th>
+                            <th class="text-left py-3 px-4">Date d'inscription</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($stats['recent_users'] as $user)
+                            <tr class="border-b border-gray-800">
+                                <td class="py-3 px-4">{{ $user->name }}</td>
+                                <td class="py-3 px-4">{{ $user->email }}</td>
+                                <td class="py-3 px-4">
+                                    <span class="px-2 py-1 rounded text-xs
+                                        @if($user->role === 'admin') bg-red-600
+                                        @elseif($user->role === 'coach') bg-blue-600
+                                        @else bg-green-600 @endif">
+                                        {{ ucfirst($user->role) }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4">{{ $user->created_at->format('d/m/Y H:i') }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
-        </div>
+        @else
+            <p class="text-gray-400">Aucun nouvel utilisateur</p>
+        @endif
+    </div>
 
-        <!-- Carte des produits -->
-        <div class="card bg-dark border border-gray-700">
-            <div class="p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Total Produits</p>
-                        <h3 class="text-2xl font-bold text-primary">{{ $stats['total_products'] }}</h3>
-                    </div>
-                    <div class="bg-primary/10 p-3 rounded-full">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Actions rapides -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <a href="{{ route('admin.products.index') }}" class="card hover:bg-gray-800 transition-colors">
+            <h3 class="text-xl font-semibold mb-2">Gérer les produits</h3>
+            <p class="text-gray-400">Ajouter et gérer les produits du catalogue</p>
+        </a>
+        
+        <a href="{{ route('admin.users.index') }}" class="card hover:bg-gray-800 transition-colors">
+            <h3 class="text-xl font-semibold mb-2">Gérer les utilisateurs</h3>
+            <p class="text-gray-400">Gérer les comptes utilisateurs et leurs rôles</p>
+        </a>
     </div>
 </div>
 @endsection 
