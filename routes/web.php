@@ -9,6 +9,7 @@ use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,10 @@ Route::middleware(['auth'])->group(function () {
     // Route du profil
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+
+    // Routes pour le profil utilisateur
+    Route::get('/profile/form', [ProfileController::class, 'form'])->name('profile.form');
+    Route::post('/profile/complete', [ProfileController::class, 'complete'])->name('profile.complete');
 
     // Routes pour les coachs
     Route::middleware(['role:coach'])->prefix('coach')->name('coach.')->group(function () {
