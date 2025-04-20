@@ -81,4 +81,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasOne(UserGoal::class);
     }
+
+    public function program()
+    {
+        return $this->hasOne(Program::class);
+    }
+
+    public function programs()
+    {
+        return $this->belongsToMany(Program::class, 'program_user')
+                    ->withTimestamps();
+    }
 }

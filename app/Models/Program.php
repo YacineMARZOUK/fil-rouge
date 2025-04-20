@@ -24,7 +24,8 @@ class Program extends Model
         'difficulty',
         'objectif_cible',
         'status',
-        'coach_id'
+        'coach_id',
+        'user_id'
     ];
 
     protected $casts = [
@@ -36,7 +37,7 @@ class Program extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function activities()
@@ -77,7 +78,7 @@ class Program extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_programs')
+        return $this->belongsToMany(User::class, 'program_user')
                     ->withTimestamps();
     }
 } 

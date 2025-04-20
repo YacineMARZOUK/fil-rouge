@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Coach;
 
 use App\Http\Controllers\Controller;
 use App\Models\Program;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,7 +21,8 @@ class ProgramController extends Controller
 
     public function create()
     {
-        return view('coach.programs.create');
+        $clients = User::where('role', 'client')->get();
+        return view('coach.programs.create', compact('clients'));
     }
 
     public function store(Request $request)
@@ -30,7 +32,8 @@ class ProgramController extends Controller
             'description' => 'required|string',
             'duration' => 'required|integer|min:1',
             'difficulty' => 'required|in:facile,moyen,difficile',
-            'objectif_cible' => 'required|in:perte_poids,prise_muscle,maintien,endurance'
+            'objectif_cible' => 'required|in:perte_poids,prise_muscle,maintien,endurance',
+            'user_id' => 'required|exists:users,id'
         ]);
 
         $program = new Program();
@@ -40,7 +43,7 @@ class ProgramController extends Controller
         $program->difficulty = $validated['difficulty'];
         $program->objectif_cible = $validated['objectif_cible'];
         $program->coach_id = Auth::id();
-        $program->status = 'active';
+        $program->user_id = $validated['user_id'];
         $program->save();
 
         return redirect()

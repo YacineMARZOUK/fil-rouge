@@ -1,19 +1,99 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12 bg-black">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-black overflow-hidden shadow-xl sm:rounded-lg border border-[#5B5B5B]">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-bold text-[#CDFB47]">Créer un Programme</h1>
-                    <a href="{{ route('coach.programs.index') }}" class="bg-[#5B5B5B] text-white px-4 py-2 rounded-md hover:bg-[#CDFB47] hover:text-black transition-colors duration-300">
-                        Retour aux programmes
-                    </a>
+<div class="min-h-screen bg-black py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-black rounded-lg p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-4xl font-bold text-[#CDFB47]">Créer un Programme</h1>
+                <a href="{{ route('coach.programs.index') }}" 
+                   class="bg-[#5B5B5B] text-white px-6 py-2 rounded-lg hover:bg-[#CDFB47] hover:text-black transition-all duration-300">
+                    Retour aux programmes
+                </a>
+            </div>
+
+            <form action="{{ route('coach.programs.store') }}" method="POST" class="space-y-8">
+                @csrf
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                            Nom du programme
+                        </label>
+                        <input type="text" name="name" id="name" 
+                               class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                               placeholder="Entrez le nom du programme"
+                               value="{{ old('name') }}" required>
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                            Description
+                        </label>
+                        <textarea name="description" id="description" rows="4" 
+                                  class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                                  placeholder="Décrivez le programme">{{ old('description') }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="duration" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                                Durée (en semaines)
+                            </label>
+                            <input type="number" name="duration" id="duration" min="1"
+                                   class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                                   placeholder="Nombre de semaines"
+                                   value="{{ old('duration') }}" required>
+                        </div>
+
+                        <div>
+                            <label for="difficulty" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                                Niveau de difficulté
+                            </label>
+                            <select name="difficulty" id="difficulty" required
+                                    class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300">
+                                <option value="">Sélectionnez un niveau</option>
+                                <option value="facile" {{ old('difficulty') == 'facile' ? 'selected' : '' }}>Facile</option>
+                                <option value="moyen" {{ old('difficulty') == 'moyen' ? 'selected' : '' }}>Moyen</option>
+                                <option value="difficile" {{ old('difficulty') == 'difficile' ? 'selected' : '' }}>Difficile</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="objectif_cible" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                                Objectif ciblé
+                            </label>
+                            <select name="objectif_cible" id="objectif_cible" required
+                                    class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300">
+                                <option value="">Sélectionnez un objectif</option>
+                                <option value="perte_poids" {{ old('objectif_cible') == 'perte_poids' ? 'selected' : '' }}>Perte de poids</option>
+                                <option value="prise_muscle" {{ old('objectif_cible') == 'prise_muscle' ? 'selected' : '' }}>Prise de muscle</option>
+                                <option value="maintien" {{ old('objectif_cible') == 'maintien' ? 'selected' : '' }}>Maintien</option>
+                                <option value="endurance" {{ old('objectif_cible') == 'endurance' ? 'selected' : '' }}>Endurance</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="user_id" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                                Client associé
+                            </label>
+                            <select name="user_id" id="user_id" required
+                                    class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300">
+                                <option value="">Sélectionnez un client</option>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}" {{ old('user_id') == $client->id ? 'selected' : '' }}>
+                                        {{ $client->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 @if($errors->any())
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
                         <ul class="list-disc list-inside">
                             @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -22,61 +102,13 @@
                     </div>
                 @endif
 
-                <form action="{{ route('coach.programs.store') }}" method="POST" class="space-y-6">
-                    @csrf
-                    
-                    <div>
-                        <label for="name" class="block text-sm font-medium text-[#CDFB47]">Nom du programme</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                               class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50 placeholder-gray-400">
-                    </div>
-
-                    <div>
-                        <label for="description" class="block text-sm font-medium text-[#CDFB47]">Description</label>
-                        <textarea name="description" id="description" rows="4" required
-                                  class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50 placeholder-gray-400">{{ old('description') }}</textarea>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label for="duration" class="block text-sm font-medium text-[#CDFB47]">Durée (en semaines)</label>
-                            <input type="number" name="duration" id="duration" value="{{ old('duration') }}" required min="1"
-                                   class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50">
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="difficulty" class="block text-sm font-medium text-[#CDFB47]">Niveau de difficulté</label>
-                            <select id="difficulty" name="difficulty" class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50">
-                                <option value="">Sélectionnez un niveau</option>
-                                <option value="facile" {{ old('difficulty') == 'facile' ? 'selected' : '' }}>Facile</option>
-                                <option value="moyen" {{ old('difficulty') == 'moyen' ? 'selected' : '' }}>Moyen</option>
-                                <option value="difficile" {{ old('difficulty') == 'difficile' ? 'selected' : '' }}>Difficile</option>
-                            </select>
-                            @error('difficulty')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div>
-                        <label for="objectif_cible" class="block text-sm font-medium text-[#CDFB47]">Objectif ciblé</label>
-                        <select name="objectif_cible" id="objectif_cible" required
-                                class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50">
-                            <option value="">Sélectionnez un objectif</option>
-                            <option value="perte_poids" {{ old('objectif_cible') == 'perte_poids' ? 'selected' : '' }}>Perte de poids</option>
-                            <option value="prise_muscle" {{ old('objectif_cible') == 'prise_muscle' ? 'selected' : '' }}>Prise de muscle</option>
-                            <option value="maintien" {{ old('objectif_cible') == 'maintien' ? 'selected' : '' }}>Maintien</option>
-                            <option value="endurance" {{ old('objectif_cible') == 'endurance' ? 'selected' : '' }}>Endurance</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end">
-                        <button type="submit" class="bg-[#CDFB47] text-black px-6 py-2 rounded-md hover:bg-[#5B5B5B] hover:text-[#CDFB47] transition-colors duration-300 font-semibold">
-                            Créer le programme
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="flex justify-end">
+                    <button type="submit" 
+                            class="bg-[#CDFB47] text-black px-8 py-3 rounded-lg text-lg font-semibold hover:bg-[#5B5B5B] hover:text-[#CDFB47] transition-all duration-300">
+                        Créer le programme
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
