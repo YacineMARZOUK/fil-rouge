@@ -60,6 +60,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
     Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
     Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+
+    Route::get('/programmes/recommandations', [ProgramController::class, 'recommanderProgrammes'])->name('programs.recommendations');
+    Route::post('/programmes/{program}/inscription', [ProgramController::class, 'assignerProgrammeAutomatique'])->name('programs.enroll');
 });
 
 // Routes de la boutique

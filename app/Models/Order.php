@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -15,23 +17,28 @@ class Order extends Model
         'status',
         'payment_status',
         'payment_method',
+        'shipping_address',
+        'billing_address',
+        'tracking_number'
+    ];
+
+    protected $casts = [
+        'total_amount' => 'decimal:2'
     ];
 
     /**
      * Obtenir l'utilisateur qui a passé la commande.
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * Obtenir les produits de la commande.
+     * Obtenir les articles de la commande.
      */
-    public function products()
+    public function items(): HasMany
     {
-        return $this->belongsToMany(Product::class, 'order_items')
-                    ->withPivot('quantity', 'price')
-                    ->withTimestamps();
+        return $this->hasMany(OrderItem::class);
     }
 } 

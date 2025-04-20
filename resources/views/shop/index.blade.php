@@ -50,16 +50,16 @@
         <form method="GET" action="{{ route('shop') }}" class="flex-1">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-4 w-full md:w-auto">
-                    <select name="type" class="input-field" onchange="this.form.submit()">
-                        <option value="">Tous les types</option>
-                        @foreach($types as $type)
-                            <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
-                                {{ ucfirst($type) }}
+                    <select name="category" class="input-field" onchange="this.form.submit()">
+                        <option value="">Toutes les catégories</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
+                                {{ ucfirst($category) }}
                             </option>
                         @endforeach
                     </select>
                     <select name="sort" class="input-field" onchange="this.form.submit()">
-                        <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>Nom</option>
+                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nom</option>
                         <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Prix croissant</option>
                         <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Prix décroissant</option>
                     </select>
@@ -93,15 +93,15 @@
         <div class="card bg-dark hover:shadow-lg transition-shadow duration-300">
             <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-800">
                 <img src="{{ asset('storage/' . $product->image) }}" 
-                     alt="{{ $product->title }}"
+                     alt="{{ $product->name }}"
                      class="h-full w-full object-cover object-center">
             </div>
             <div class="p-4">
-                <h3 class="text-lg font-semibold mb-2">{{ $product->title }}</h3>
+                <h3 class="text-lg font-semibold mb-2">{{ $product->name }}</h3>
                 <p class="text-gray-400 text-sm mb-2 line-clamp-2">{{ $product->description }}</p>
                 <div class="flex justify-between items-center">
                     <span class="text-primary font-bold">{{ number_format($product->price, 2, ',', ' ') }} €</span>
-                    <span class="text-sm text-gray-400">Stock: {{ $product->quantity }}</span>
+                    <span class="text-sm text-gray-400">Stock: {{ $product->stock }}</span>
                 </div>
                 
                 @if(auth()->check() && auth()->user()->role === 'admin')
@@ -125,7 +125,7 @@
                 </div>
                 @else
                 <div class="mt-4">
-                    <button onclick="openModal({{ $product->id }}, '{{ $product->title }}', '{{ number_format($product->price, 2, ',', ' ') }}', '{{ asset('storage/' . $product->image) }}')" 
+                    <button onclick="openModal({{ $product->id }}, '{{ $product->name }}', '{{ number_format($product->price, 2, ',', ' ') }}', '{{ asset('storage/' . $product->image) }}')" 
                             class="btn-primary w-full flex items-center justify-center">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -150,9 +150,9 @@
 let currentProductId = null;
 let isProcessing = false;
 
-function openModal(productId, title, price, image) {
+function openModal(productId, name, price, image) {
     currentProductId = productId;
-    document.getElementById('modalProductTitle').textContent = title;
+    document.getElementById('modalProductTitle').textContent = name;
     document.getElementById('modalProductPrice').textContent = price + ' €';
     document.getElementById('modalProductImage').src = image;
     document.getElementById('modalQuantity').value = 1;
@@ -198,86 +198,46 @@ function showNotification(message, type = 'success') {
     
     document.body.appendChild(notification);
     
+    // Faire disparaître la notification après 3 secondes
     setTimeout(() => {
         notification.style.opacity = '0';
-        setTimeout(() => notification.remove(), 500);
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
     }, 3000);
 }
 
-function addToCart() {
+async function addToCart() {
     if (isProcessing) return;
-    
     isProcessing = true;
-    const quantity = document.getElementById('modalQuantity').value;
-    const submitButton = document.querySelector('[onclick="addToCart()"]');
-    const originalText = submitButton.innerHTML;
     
-    // Désactiver le bouton et montrer un indicateur de chargement
-    submitButton.disabled = true;
-    submitButton.innerHTML = `
-        <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Ajout en cours...
-    `;
+    const quantity = parseInt(document.getElementById('modalQuantity').value);
     
-    fetch(`/boutique/add-to-cart/${currentProductId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            quantity: quantity
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erreur réseau');
+    try {
+        const response = await fetch(`/cart/add/${currentProductId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ quantity })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            showNotification('Produit ajouté au panier avec succès');
+            document.getElementById('cartCount').textContent = data.cartCount;
+            closeModal();
+        } else {
+            showNotification(data.message || 'Une erreur est survenue', 'error');
         }
-        return response.json();
-    })
-    .then(data => {
-        document.getElementById('cartCount').textContent = data.cart_count;
-        closeModal();
-        showNotification(data.message, 'success');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showNotification('Une erreur est survenue lors de l\'ajout au panier', 'error');
-    })
-    .finally(() => {
-        // Réactiver le bouton et restaurer son texte
-        submitButton.disabled = false;
-        submitButton.innerHTML = originalText;
+    } catch (error) {
+        showNotification('Une erreur est survenue', 'error');
+    } finally {
         isProcessing = false;
-    });
+    }
 }
-
-// Gestionnaire de clic en dehors du modal
-document.getElementById('cartModal').addEventListener('click', function(e) {
-    if (e.target === this && !isProcessing) {
-        closeModal();
-    }
-});
-
-// Gestionnaire de touche Echap
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && !document.getElementById('cartModal').classList.contains('hidden') && !isProcessing) {
-        closeModal();
-    }
-});
-
-// Gestionnaire de touche Entrée pour la quantité
-document.getElementById('modalQuantity').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        if (!isProcessing) {
-            addToCart();
-        }
-    }
-});
 </script>
 @endpush
 

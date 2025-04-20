@@ -129,6 +129,7 @@
                         @else
                             <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
                             <a href="{{ route('cart.index') }}" class="nav-link">Panier</a>
+                            <a href="{{ route('programs.recommendations') }}" class="nav-link">Programmes Recommandés</a>
                         @endif
                         <a href="{{ route('contact') }}" class="nav-link">Contact</a>
 
@@ -152,6 +153,7 @@
                                     <a href="{{ route('coach.activities.create') }}" class="block px-4 py-2 text-sm nav-link">Ajouter une activité</a>
                                 @else
                                     <a href="{{ route('cart.index') }}" class="block px-4 py-2 text-sm nav-link">Mon panier</a>
+                                    <a href="{{ route('programs.recommendations') }}" class="block px-4 py-2 text-sm nav-link">Programmes Recommandés</a>
                                 @endif
 
                                 <form method="POST" action="{{ route('logout') }}" class="block">
@@ -193,6 +195,7 @@
                         @else
                             <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
                             <a href="{{ route('cart.index') }}" class="nav-link">Panier</a>
+                            <a href="{{ route('programs.recommendations') }}" class="nav-link">Programmes Recommandés</a>
                         @endif
                         <a href="{{ route('contact') }}" class="nav-link">Contact</a>
                         <a href="{{ route('profile') }}" class="nav-link">Profil</a>
@@ -202,7 +205,7 @@
                                 Déconnexion
                             </button>
                         </form>
-                    @else
+                @else
                         <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
                         <a href="{{ route('contact') }}" class="nav-link">Contact</a>
                         <a href="{{ route('login') }}" class="nav-link">Connexion</a>

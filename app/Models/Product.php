@@ -34,6 +34,18 @@ class Product extends Model
     ];
 
     /**
+     * Obtenir le libellé du type de produit
+     */
+    public function getTypeLabelAttribute()
+    {
+        return [
+            'nutrition' => 'Nutrition',
+            'vetement' => 'Vêtement',
+            'accessoire' => 'Accessoire'
+        ][$this->type] ?? $this->type;
+    }
+
+    /**
      * Obtenir le prix formaté avec le symbole de l'euro
      */
     public function getFormattedPriceAttribute()

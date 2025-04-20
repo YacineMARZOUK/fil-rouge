@@ -1,101 +1,81 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Créer un nouveau programme</h3>
+<div class="py-12 bg-black">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-black overflow-hidden shadow-xl sm:rounded-lg border border-[#5B5B5B]">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-bold text-[#CDFB47]">Créer un Programme</h1>
+                    <a href="{{ route('coach.programs.index') }}" class="bg-[#5B5B5B] text-white px-4 py-2 rounded-md hover:bg-[#CDFB47] hover:text-black transition-colors duration-300">
+                        Retour aux programmes
+                    </a>
                 </div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('coach.programs.store') }}">
-                        @csrf
+                @if($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <ul class="list-disc list-inside">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                        <div class="form-group">
-                            <label for="name">Nom du programme</label>
-                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                                   id="name" name="name" value="{{ old('name') }}" required>
-                            @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                <form action="{{ route('coach.programs.store') }}" method="POST" class="space-y-6">
+                    @csrf
+                    
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-[#CDFB47]">Nom du programme</label>
+                        <input type="text" name="name" id="name" value="{{ old('name') }}" required
+                               class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50 placeholder-gray-400">
+                    </div>
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-[#CDFB47]">Description</label>
+                        <textarea name="description" id="description" rows="4" required
+                                  class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50 placeholder-gray-400">{{ old('description') }}</textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="duration" class="block text-sm font-medium text-[#CDFB47]">Durée (en semaines)</label>
+                            <input type="number" name="duration" id="duration" value="{{ old('duration') }}" required min="1"
+                                   class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50">
                         </div>
 
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <textarea class="form-control @error('description') is-invalid @enderror" 
-                                      id="description" name="description" rows="3" required>{{ old('description') }}</textarea>
-                            @error('description')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="user_id">Client</label>
-                            <select class="form-control @error('user_id') is-invalid @enderror" 
-                                    id="user_id" name="user_id" required>
-                                <option value="">Sélectionnez un client</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('user_id')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="duration">Durée (en semaines)</label>
-                            <input type="number" class="form-control @error('duration') is-invalid @enderror" 
-                                   id="duration" name="duration" value="{{ old('duration') }}" min="1" required>
-                            @error('duration')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label for="difficulty_level">Niveau de difficulté</label>
-                            <select class="form-control @error('difficulty_level') is-invalid @enderror" 
-                                    id="difficulty_level" name="difficulty_level" required>
+                        <div class="mb-4">
+                            <label for="difficulty" class="block text-sm font-medium text-[#CDFB47]">Niveau de difficulté</label>
+                            <select id="difficulty" name="difficulty" class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50">
                                 <option value="">Sélectionnez un niveau</option>
-                                <option value="beginner" {{ old('difficulty_level') == 'beginner' ? 'selected' : '' }}>
-                                    Débutant
-                                </option>
-                                <option value="intermediate" {{ old('difficulty_level') == 'intermediate' ? 'selected' : '' }}>
-                                    Intermédiaire
-                                </option>
-                                <option value="advanced" {{ old('difficulty_level') == 'advanced' ? 'selected' : '' }}>
-                                    Avancé
-                                </option>
+                                <option value="facile" {{ old('difficulty') == 'facile' ? 'selected' : '' }}>Facile</option>
+                                <option value="moyen" {{ old('difficulty') == 'moyen' ? 'selected' : '' }}>Moyen</option>
+                                <option value="difficile" {{ old('difficulty') == 'difficile' ? 'selected' : '' }}>Difficile</option>
                             </select>
-                            @error('difficulty_level')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
+                            @error('difficulty')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+                    </div>
 
-                        <div class="form-group mb-0">
-                            <button type="submit" class="btn btn-primary">
-                                Créer le programme
-                            </button>
-                            <a href="{{ route('coach.programs.index') }}" class="btn btn-secondary">
-                                Annuler
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                    <div>
+                        <label for="objectif_cible" class="block text-sm font-medium text-[#CDFB47]">Objectif ciblé</label>
+                        <select name="objectif_cible" id="objectif_cible" required
+                                class="mt-1 block w-full rounded-md bg-[#1A1A1A] border-[#5B5B5B] text-white shadow-sm focus:border-[#CDFB47] focus:ring focus:ring-[#CDFB47] focus:ring-opacity-50">
+                            <option value="">Sélectionnez un objectif</option>
+                            <option value="perte_poids" {{ old('objectif_cible') == 'perte_poids' ? 'selected' : '' }}>Perte de poids</option>
+                            <option value="prise_muscle" {{ old('objectif_cible') == 'prise_muscle' ? 'selected' : '' }}>Prise de muscle</option>
+                            <option value="maintien" {{ old('objectif_cible') == 'maintien' ? 'selected' : '' }}>Maintien</option>
+                            <option value="endurance" {{ old('objectif_cible') == 'endurance' ? 'selected' : '' }}>Endurance</option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-[#CDFB47] text-black px-6 py-2 rounded-md hover:bg-[#5B5B5B] hover:text-[#CDFB47] transition-colors duration-300 font-semibold">
+                            Créer le programme
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

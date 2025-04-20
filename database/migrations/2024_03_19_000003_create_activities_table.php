@@ -11,13 +11,10 @@ return new class extends Migration
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->foreignId('program_id')->nullable()->constrained()->onDelete('set null');
-            $table->dateTime('date');
-            $table->string('location');
-            $table->integer('max_participants')->default(10);
-            $table->integer('duration')->comment('Durée en minutes');
-            $table->text('equipment')->nullable();
+            $table->text('description');
+            $table->integer('duration');
+            $table->foreignId('coach_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('program_id')->constrained('programs')->onDelete('cascade');
             $table->timestamps();
         });
     }

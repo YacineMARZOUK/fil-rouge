@@ -13,22 +13,20 @@ class UserGoal extends Model
 
     protected $fillable = [
         'user_id',
-        'goal',
-        'age',
         'sexe',
+        'age',
         'taille',
         'poids',
         'niveau_activite',
-        'objectif_principal'
+        'objectif_principal',
+        'besoins_caloriques'
     ];
 
     protected $casts = [
         'age' => 'integer',
-        'taille' => 'integer',
+        'taille' => 'decimal:2',
         'poids' => 'decimal:2',
-        'sexe' => 'string',
-        'niveau_activite' => 'string',
-        'objectif_principal' => 'string'
+        'besoins_caloriques' => 'integer'
     ];
 
     public function user()

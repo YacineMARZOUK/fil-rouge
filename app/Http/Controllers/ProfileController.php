@@ -66,7 +66,7 @@ class ProfileController extends Controller
     public function complete(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'genre' => 'required|in:homme,femme',
+            'sexe' => 'required|in:homme,femme',
             'age' => 'required|integer|min:10|max:100',
             'taille' => 'required|numeric|min:100|max:250',
             'poids' => 'required|numeric|min:30|max:300',
@@ -85,27 +85,34 @@ class ProfileController extends Controller
 
         // Créer ou mettre à jour les objectifs de l'utilisateur
         $user = Auth::user();
-        $user->goals()->updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'genre' => $request->genre,
-                'age' => $request->age,
-                'taille' => $request->taille,
-                'poids' => $request->poids,
-                'niveau_activite' => $request->niveau_activite,
-                'objectif_principal' => $request->objectif_principal,
-                'besoins_caloriques' => $besoinsCaloriques
-            ]
-        );
+        
+        try {
+            $user->goals()->updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'sexe' => $request->sexe,
+                    'age' => (int)$request->age,
+                    'taille' => (float)$request->taille,
+                    'poids' => (float)$request->poids,
+                    'niveau_activite' => $request->niveau_activite,
+                    'objectif_principal' => $request->objectif_principal,
+                    'besoins_caloriques' => (int)$besoinsCaloriques
+                ]
+            );
 
-        return redirect()->route('shop')
-            ->with('success', 'Votre profil a été mis à jour avec succès.');
+            return redirect()->route('shop')
+                ->with('success', 'Votre profil a été mis à jour avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['error' => 'Une erreur est survenue lors de la sauvegarde de vos données.'])
+                ->withInput();
+        }
     }
 
     private function calculerBesoinsCaloriques($data)
     {
         // Calcul du métabolisme de base (MB)
-        if ($data['genre'] === 'homme') {
+        if ($data['sexe'] === 'homme') {
             $mb = 88.362 + (13.397 * $data['poids']) + (4.799 * $data['taille']) - (5.677 * $data['age']);
         } else {
             $mb = 447.593 + (9.247 * $data['poids']) + (3.098 * $data['taille']) - (4.330 * $data['age']);

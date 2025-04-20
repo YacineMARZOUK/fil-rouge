@@ -20,16 +20,18 @@ class Program extends Model
     protected $fillable = [
         'name',
         'description',
-        'user_id',
         'duration',
-        'difficulty_level',
-        'status'
+        'difficulty',
+        'objectif_cible',
+        'status',
+        'coach_id'
     ];
 
     protected $casts = [
         'duration' => 'integer',
-        'difficulty_level' => 'string',
-        'status' => 'string'
+        'difficulty' => 'string',
+        'status' => 'string',
+        'objectif_cible' => 'string'
     ];
 
     public function user()
@@ -44,11 +46,11 @@ class Program extends Model
 
     public function getDifficultyLevelFormattedAttribute()
     {
-        return match($this->difficulty_level) {
+        return match($this->difficulty) {
             'beginner' => 'Débutant',
             'intermediate' => 'Intermédiaire',
             'advanced' => 'Avancé',
-            default => $this->difficulty_level
+            default => $this->difficulty
         };
     }
 
@@ -66,5 +68,16 @@ class Program extends Model
     public function getDurationFormattedAttribute()
     {
         return $this->duration . ' semaines';
+    }
+
+    public function coach()
+    {
+        return $this->belongsTo(User::class, 'coach_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_programs')
+                    ->withTimestamps();
     }
 } 

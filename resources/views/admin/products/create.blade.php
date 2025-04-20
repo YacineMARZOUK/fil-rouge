@@ -3,7 +3,7 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">Ajouter un nouveau produit</h1>
+        <h1 class="text-3xl font-bold mb-8 text-gray-200">Ajouter un nouveau produit</h1>
 
         @if(session('error'))
             <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
@@ -28,9 +28,9 @@
                         <label for="type" class="block text-sm font-medium text-gray-400 mb-1">Type de produit</label>
                         <select name="type" id="type" class="input-field w-full @error('type') border-red-500 @enderror" required>
                             <option value="">Sélectionnez un type</option>
-                            @foreach($types as $value => $label)
-                                <option value="{{ $value }}" {{ old('type') == $value ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
+                            <option value="nutrition" {{ old('type') == 'nutrition' ? 'selected' : '' }}>Nutrition</option>
+                            <option value="vetement" {{ old('type') == 'vetement' ? 'selected' : '' }}>Vêtement</option>
+                            <option value="accessoire" {{ old('type') == 'accessoire' ? 'selected' : '' }}>Accessoire</option>
                         </select>
                         @error('type')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-400 mb-1">Prix</label>
+                        <label for="price" class="block text-sm font-medium text-gray-400 mb-1">Prix (€)</label>
                         <input type="number" name="price" id="price" step="0.01" min="0" class="input-field w-full @error('price') border-red-500 @enderror" value="{{ old('price') }}" required>
                         @error('price')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -73,7 +73,7 @@
             </div>
 
             <div class="flex justify-end space-x-4">
-                <a href="{{ route('admin.dashboard') }}" class="btn-secondary">
+                <a href="{{ route('admin.products.index') }}" class="btn-secondary">
                     Annuler
                 </a>
                 <button type="submit" class="btn-primary">
@@ -83,4 +83,35 @@
         </form>
     </div>
 </div>
-@endsection 
+@endsection
+
+<style>
+.card {
+    @apply bg-gray-900 rounded-lg p-6;
+    @apply border border-gray-800;
+}
+
+.input-field {
+    @apply bg-gray-800 border border-gray-700 rounded-lg px-4 py-2;
+    @apply text-gray-200 placeholder-gray-500;
+    @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+.btn-primary {
+    @apply bg-blue-600 text-white px-6 py-2 rounded-lg;
+    @apply hover:bg-blue-700 transition-colors duration-200;
+}
+
+.btn-secondary {
+    @apply bg-gray-700 text-white px-6 py-2 rounded-lg;
+    @apply hover:bg-gray-600 transition-colors duration-200;
+}
+
+/* Style personnalisé pour l'input file */
+input[type="file"].input-field {
+    @apply file:mr-4 file:py-2 file:px-4;
+    @apply file:rounded-lg file:border-0;
+    @apply file:text-gray-200 file:bg-gray-700;
+    @apply file:hover:bg-gray-600 file:transition-colors file:duration-200;
+}
+</style> 

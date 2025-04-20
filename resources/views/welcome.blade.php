@@ -22,7 +22,7 @@
                     <a href="{{ route('register') }}" class="bg-green-400 hover:bg-green-500 text-black px-6 py-2 rounded-full font-bold transition">JOIN NOW</a>
                 </div>
             </nav>
-        </div>
+                                </div>
 
         <!-- Contenu Hero -->
         <div class="absolute inset-0 flex items-center">
@@ -40,7 +40,7 @@
                         <div class="text-white">
                             <span class="text-4xl font-bold text-green-400">500+</span>
                             <p class="text-sm">Members happy</p>
-                        </div>
+                            </div>
                         <a href="{{ route('register') }}" 
                            class="inline-block bg-green-400 hover:bg-green-500 text-black px-8 py-3 rounded-full font-bold transition transform hover:scale-105">
                             START YOUR JOURNEY
@@ -60,31 +60,31 @@
                     <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
-                        </svg>
-                    </div>
+                                    </svg>
+                                </div>
                     <h3 class="text-xl font-bold text-white mb-2">Personal Training</h3>
                     <p class="text-gray-400">Programmes personnalisés adaptés à vos objectifs spécifiques.</p>
-                </div>
+                            </div>
                 <div class="bg-gray-900 p-6 rounded-lg">
                     <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
+                                    </svg>
+                                </div>
                     <h3 class="text-xl font-bold text-white mb-2">Group Classes</h3>
                     <p class="text-gray-400">Des cours collectifs dynamiques et motivants.</p>
-                </div>
+                            </div>
                 <div class="bg-gray-900 p-6 rounded-lg">
                     <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mb-4">
                         <svg class="w-6 h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                    </div>
+                                    </svg>
+                                </div>
                     <h3 class="text-xl font-bold text-white mb-2">Nutrition Planning</h3>
                     <p class="text-gray-400">Conseils nutritionnels pour optimiser vos résultats.</p>
                 </div>
-            </div>
-        </div>
+                            </div>
+                        </div>
     </section>
 
     <!-- Section Facility -->

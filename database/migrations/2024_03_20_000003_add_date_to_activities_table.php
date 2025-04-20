@@ -9,15 +9,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('activities', function (Blueprint $table) {
-            $table->foreignId('coach_id')->after('id')->constrained('users')->onDelete('cascade');
+            $table->timestamp('date')->nullable()->after('description');
         });
     }
 
     public function down()
     {
         Schema::table('activities', function (Blueprint $table) {
-            $table->dropForeign(['coach_id']);
-            $table->dropColumn('coach_id');
+            $table->dropColumn('date');
         });
     }
 }; 

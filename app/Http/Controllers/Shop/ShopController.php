@@ -22,14 +22,14 @@ class ShopController extends Controller
     {
         $query = Product::query();
 
-        // Filtrer par type
-        if ($request->has('type') && $request->type !== '') {
-            $query->where('type', $request->type);
+        // Filtrage par catégorie
+        if ($request->has('category')) {
+            $query->where('category', $request->category);
         }
 
-        // Recherche par titre
-        if ($request->has('search') && $request->search !== '') {
-            $query->where('title', 'like', '%' . $request->search . '%');
+        // Recherche par nom
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
         }
 
         // Tri
@@ -42,14 +42,14 @@ class ShopController extends Controller
                     $query->orderBy('price', 'desc');
                     break;
                 default:
-                    $query->orderBy('title', 'asc');
+                    $query->orderBy('name', 'asc');
             }
         }
 
         $products = $query->paginate(12);
-        $types = Product::distinct('type')->pluck('type');
+        $categories = Product::distinct('category')->pluck('category');
 
-        return view('shop.index', compact('products', 'types'));
+        return view('shop.index', compact('products', 'categories'));
     }
 
     /**

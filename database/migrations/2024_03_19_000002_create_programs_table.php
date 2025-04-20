@@ -11,11 +11,10 @@ return new class extends Migration
         Schema::create('programs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description')->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->integer('duration')->comment('Durée en semaines');
-            $table->enum('difficulty_level', ['beginner', 'intermediate', 'advanced']);
-            $table->enum('status', ['draft', 'active', 'completed', 'cancelled'])->default('draft');
+            $table->text('description');
+            $table->string('duration');
+            $table->string('difficulty');
+            $table->foreignId('coach_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

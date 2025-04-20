@@ -9,15 +9,15 @@ return new class extends Migration
     public function up()
     {
         Schema::table('programs', function (Blueprint $table) {
-            $table->foreignId('coach_id')->after('id')->constrained('users')->onDelete('cascade');
+            $table->enum('objectif_cible', ['perte_poids', 'prise_muscle', 'maintien', 'endurance'])
+                  ->after('difficulty');
         });
     }
 
     public function down()
     {
         Schema::table('programs', function (Blueprint $table) {
-            $table->dropForeign(['coach_id']);
-            $table->dropColumn('coach_id');
+            $table->dropColumn('objectif_cible');
         });
     }
 }; 

@@ -21,40 +21,27 @@ class DashboardController extends Controller
     {
         $coach = Auth::user();
         
+        // Statistiques de base
         $stats = [
-            'total_clients' => User::where('role', 'client')->count(),
+            'total_clients' => User::where('role', 'user')->count(),
             'total_programs' => Program::where('coach_id', $coach->id)->count(),
             'total_activities' => Activity::where('coach_id', $coach->id)->count(),
-            'upcoming_activities' => Activity::where('coach_id', $coach->id)
-                ->where('date', '>=', now())
-                ->orderBy('date')
-                ->take(5)
-                ->get()
         ];
 
         // Programmes récents
         $recent_programs = Program::where('coach_id', $coach->id)
-                                ->with('user')
                                 ->latest()
                                 ->take(5)
                                 ->get();
-
-       
 
         // Objectifs utilisateurs récents
-        $recent_goals = UserGoal::whereHas('program', function($query) use ($coach) {
-                                    $query->where('coach_id', $coach->id);
-                                })
-                                ->with(['user', 'program'])
-                                ->latest()
-                                ->take(5)
-                                ->get();
+        $recent_goals = UserGoal::whereHas('user', function($query) {
+                            $query->where('role', 'user');
+                        })
+                        ->latest()
+                        ->take(5)
+                        ->get();
 
-        return view('coach.dashboard', compact(
-            'stats',
-            'recent_programs',
-            
-            'recent_goals'
-        ));
+        return view('coach.dashboard', compact('stats', 'recent_programs', 'recent_goals'));
     }
 } 
