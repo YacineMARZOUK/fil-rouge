@@ -119,7 +119,7 @@
                 <p class="text-gray-400">Ajouter et gérer les produits du catalogue</p>
             </a>
             
-            <a href="{{ route('admin.users.index') }}" class="bg-black border border-[#5B5B5B] hover:bg-gray-800 shadow-xl rounded-lg p-6 transition-colors">
+            <a href="{{ route('admin.users.index') }}" class="bg-black border border-[#5B5B5B] hover:bg-[#CDFB47] shadow-xl rounded-lg p-6 transition-colors">
                 <h3 class="text-xl font-semibold text-white mb-2">Gérer les utilisateurs</h3>
                 <p class="text-gray-400">Gérer les comptes utilisateurs et leurs rôles</p>
             </a>
