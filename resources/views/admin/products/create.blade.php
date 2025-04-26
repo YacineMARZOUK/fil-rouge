@@ -17,17 +17,17 @@
             <div class="card">
                 <div class="space-y-4">
                     <div>
-                        <label for="title" class="block text-sm font-medium text-gray-400 mb-1">Nom du produit</label>
-                        <input type="text" name="title" id="title" class="input-field w-full @error('title') border-red-500 @enderror" value="{{ old('title') }}" required>
-                        @error('title')
+                        <label for="name" class="block text-sm font-medium text-gray-400 mb-1">Nom du produit</label>
+                        <input type="text" name="name" id="name" class="input-field w-full @error('name') border-red-500 @enderror" value="{{ old('name') }}" required>
+                        @error('name')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
-                        <label for="type" class="block text-sm font-medium text-gray-400 mb-1">Type de produit</label>
+                        <label for="type" class="block text-sm font-medium text-gray-400 mb-1">Catégorie du produit</label>
                         <select name="type" id="type" class="input-field w-full @error('type') border-red-500 @enderror" required>
-                            <option value="">Sélectionnez un type</option>
+                            <option value="">Sélectionnez une catégorie</option>
                             <option value="nutrition" {{ old('type') == 'nutrition' ? 'selected' : '' }}>Nutrition</option>
                             <option value="vetement" {{ old('type') == 'vetement' ? 'selected' : '' }}>Vêtement</option>
                             <option value="accessoire" {{ old('type') == 'accessoire' ? 'selected' : '' }}>Accessoire</option>
@@ -54,9 +54,9 @@
                     </div>
 
                     <div>
-                        <label for="quantity" class="block text-sm font-medium text-gray-400 mb-1">Quantité</label>
-                        <input type="number" name="quantity" id="quantity" min="0" class="input-field w-full @error('quantity') border-red-500 @enderror" value="{{ old('quantity') }}" required>
-                        @error('quantity')
+                        <label for="stock" class="block text-sm font-medium text-gray-400 mb-1">Quantité en stock</label>
+                        <input type="number" name="stock" id="stock" min="0" class="input-field w-full @error('stock') border-red-500 @enderror" value="{{ old('stock') }}" required>
+                        @error('stock')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
@@ -64,7 +64,7 @@
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-400 mb-1">Image du produit</label>
                         <input type="file" name="image" id="image" accept="image/*" class="input-field w-full @error('image') border-red-500 @enderror" required>
-                        <p class="text-sm text-gray-400 mt-1">Format accepté : JPEG, PNG, JPG, GIF. Taille maximale : 2MB</p>
+                        <p class="text-sm text-gray-400 mt-1">Formats acceptés : JPEG, PNG, JPG, GIF. Taille maximale : 2MB</p>
                         @error('image')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
@@ -107,11 +107,10 @@
     @apply hover:bg-gray-600 transition-colors duration-200;
 }
 
-/* Style personnalisé pour l'input file */
 input[type="file"].input-field {
     @apply file:mr-4 file:py-2 file:px-4;
     @apply file:rounded-lg file:border-0;
     @apply file:text-gray-200 file:bg-gray-700;
     @apply file:hover:bg-gray-600 file:transition-colors file:duration-200;
 }
-</style> 
+</style>

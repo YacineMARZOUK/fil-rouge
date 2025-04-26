@@ -15,11 +15,11 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'title',
+        'name',
         'description',
-        'type',
+        'stock',
         'price',
-        'quantity',
+        'type',
         'image'
     ];
 
@@ -30,7 +30,7 @@ class Product extends Model
      */
     protected $casts = [
         'price' => 'decimal:2',
-        'quantity' => 'integer'
+        'stock' => 'integer'
     ];
 
     /**
