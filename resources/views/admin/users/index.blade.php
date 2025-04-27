@@ -24,7 +24,7 @@
         </div>
     @endif
 
-    <div class="card">
+    <div class="bg-black">
         <div class="overflow-x-auto">
             <table class="min-w-full">
                 <thead>

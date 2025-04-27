@@ -35,44 +35,41 @@
         </div>
 
         <!-- Commandes récentes -->
-        <div class="bg-black border border-[#5B5B5B] shadow-xl rounded-lg p-6 mb-8">
-            <h2 class="text-2xl font-bold text-white mb-4">Commandes récentes</h2>
-            @if($stats['recent_orders']->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="min-w-full text-white">
-                        <thead>
-                            <tr class="border-b border-[#5B5B5B]">
-                                <th class="text-left py-3 px-4">ID</th>
-                                <th class="text-left py-3 px-4">Client</th>
-                                <th class="text-left py-3 px-4">Montant</th>
-                                <th class="text-left py-3 px-4">Date</th>
-                                <th class="text-left py-3 px-4">Statut</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($stats['recent_orders'] as $order)
-                                <tr class="border-b border-[#5B5B5B]">
-                                    <td class="py-3 px-4">#{{ $order->id }}</td>
-                                    <td class="py-3 px-4">{{ $order->user->name }}</td>
-                                    <td class="py-3 px-4">{{ number_format($order->total_amount, 2) }} €</td>
-                                    <td class="py-3 px-4">{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                                    <td class="py-3 px-4">
-                                        <span class="px-2 py-1 rounded text-xs font-semibold 
-                                            @if($order->status === 'completed') bg-green-600
-                                            @elseif($order->status === 'pending') bg-yellow-600
-                                            @else bg-red-600 @endif">
-                                            {{ ucfirst($order->status) }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                <p class="text-gray-400">Aucune commande récente</p>
-            @endif
+        <!-- Commandes récentes -->
+<div class="bg-black border border-[#5B5B5B] shadow-xl rounded-lg p-6 mb-8">
+    <h2 class="text-2xl font-bold text-white mb-4">Articles récents du panier</h2>
+    @if($stats['recent_cart_items']->count() > 0)
+        <div class="overflow-x-auto">
+            <table class="min-w-full text-white">
+                <thead>
+                    <tr class="border-b border-[#5B5B5B]">
+                        <th class="text-left py-3 px-4">ID</th>
+                        <th class="text-left py-3 px-4">Client</th>
+                        <th class="text-left py-3 px-4">Produit</th>
+                        <th class="text-left py-3 px-4">Quantité</th>
+                        <th class="text-left py-3 px-4">Prix total</th>
+                        <th class="text-left py-3 px-4">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($stats['recent_cart_items'] as $cartItem)
+                        <tr class="border-b border-[#5B5B5B]">
+                            <td class="py-3 px-4">#{{ $cartItem->id }}</td>
+                            <td class="py-3 px-4">{{ $cartItem->user->name }}</td>
+                            <td class="py-3 px-4">{{ $cartItem->product->name }}</td>
+                            <td class="py-3 px-4">{{ $cartItem->quantity }}</td>
+                            <td class="py-3 px-4">{{ number_format($cartItem->total_price, 2) }} €</td>
+                            <td class="py-3 px-4">{{ $cartItem->created_at->format('d/m/Y H:i') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+    @else
+        <p class="text-gray-400">Aucun article récent dans le panier</p>
+    @endif
+</div>
+
 
         <!-- Nouveaux utilisateurs -->
         <div class="bg-black border border-[#5B5B5B] shadow-xl rounded-lg p-6">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Program;
@@ -26,10 +27,11 @@ class DashboardController extends Controller
             'total_products' => Product::count(),
             'total_orders' => Order::count(),
             'total_programs' => Program::count(),
-            'recent_orders' => Order::with('user')
-                                  ->orderBy('created_at', 'desc')
-                                  ->take(5)
-                                  ->get(),
+            'total_cart_items' => CartItem::count(), // Remplacer les commandes par les articles du panier
+        'recent_cart_items' => CartItem::with('user', 'product') // Charger les articles de panier récents
+                                    ->orderBy('created_at', 'desc')
+                                    ->take(5)
+                                    ->get(),
             'recent_users' => User::orderBy('created_at', 'desc')
                                  ->take(5)
                                  ->get(),
