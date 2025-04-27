@@ -23,8 +23,8 @@ class ShopController extends Controller
         $query = Product::query();
 
         // Filtrage par catégorie
-        if ($request->has('category')) {
-            $query->where('category', $request->category);
+        if ($request->has('type')) {
+            $query->where('type', $request->category);
         }
 
         // Recherche par nom
@@ -47,9 +47,10 @@ class ShopController extends Controller
         }
 
         $products = $query->paginate(12);
-        $categories = Product::distinct('category')->pluck('category');
+        $type = Product::select('type')->distinct()->pluck('type');
 
-        return view('shop.index', compact('products', 'categories'));
+
+        return view('shop.index', compact('products', 'type'));
     }
 
     /**

@@ -16,13 +16,11 @@ class ActivityParticipant extends Model
         'user_id'
     ];
 
-    // Relation avec l'activité
     public function activity()
     {
         return $this->belongsTo(Activity::class);
     }
 
-    // Relation avec l'utilisateur
     public function user()
     {
         return $this->belongsTo(User::class);

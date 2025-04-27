@@ -52,7 +52,7 @@
                 <div class="flex items-center gap-4 w-full md:w-auto">
                     <select name="category" class="input-field" onchange="this.form.submit()">
                         <option value="">Toutes les catégories</option>
-                        @foreach($categories as $category)
+                        @foreach($type as $category)
                             <option value="{{ $category }}" {{ request('category') == $category ? 'selected' : '' }}>
                                 {{ ucfirst($category) }}
                             </option>

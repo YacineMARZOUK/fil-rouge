@@ -10,6 +10,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Client\ActivityController as ClientActivityController;  
+
+Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+Route::get('/activities/{activity}', [ActivityController::class, 'show'])->name('activities.show');
+Route::get('/activities/{activity}/join', [ActivityController::class, 'join'])->name('activities.join');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +31,16 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+//activity pour le client
+
+
+Route::prefix('client')->name('client.')->middleware(['auth', 'role:client'])->group(function () {
+    Route::get('/activities', [ClientActivityController::class, 'index'])->name('activities.index');
+    Route::get('/activities/{activity}', [ClientActivityController::class, 'show'])->name('activities.show');
+    Route::post('/activities/{activity}/join', [ClientActivityController::class, 'join'])->name('activities.join');
+});
+
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

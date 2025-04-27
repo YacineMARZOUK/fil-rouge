@@ -21,17 +21,13 @@ class Activity extends Model
         'description',
         'date',
         'duration',
-        'location',
-        'max_participants',
-        'price',
         'coach_id'
     ];
 
     protected $casts = [
         'date' => 'datetime',
-        'max_participants' => 'integer',
         'duration' => 'integer',
-        'price' => 'decimal:2'
+
     ];
 
    

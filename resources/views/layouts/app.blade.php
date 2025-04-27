@@ -132,6 +132,7 @@
                             <a href="{{ route('shop') }}" class="nav-link">Boutique</a>
                             <a href="{{ route('cart.index') }}" class="nav-link">Panier</a>
                             <a href="{{ route('programs.recommendations') }}" class="nav-link">Programmes Recommandés</a>
+                            <a href="{{ route('client.activities.index') }}" class="nav-link">Activités</a>
                         @endif
                         <a href="{{ route('contact') }}" class="nav-link">Contact</a>
 

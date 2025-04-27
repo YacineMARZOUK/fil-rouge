@@ -47,20 +47,7 @@
                            placeholder="60">
                 </div>
 
-                <div>
-                    <label for="user_id" class="block text-[#CDFB47] text-lg font-medium mb-2">
-                        Client (Participant initial)
-                    </label>
-                    <select id="user_id" name="user_id" required
-                           class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300">
-                        <option value="">Sélectionner un client</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                {{ $user->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                
 
                 @if($errors->any())
                     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">

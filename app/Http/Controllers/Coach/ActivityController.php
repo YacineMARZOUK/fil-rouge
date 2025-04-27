@@ -50,7 +50,7 @@ class ActivityController extends Controller
             'description' => 'required|string',
             'date' => 'required|date|after:now',
             'duration' => 'required|integer|min:15',
-            'user_id' => 'required|exists:users,id'
+            
         ]);
     
         // Create the activity with validated fields except user_id
@@ -106,4 +106,5 @@ class ActivityController extends Controller
             ->route('coach.activities.index')
             ->with('success', 'L\'activité a été supprimée avec succès.');
     }
+    
 } 
