@@ -9,6 +9,17 @@
             </div>
 
             <div class="p-6">
+                <!-- Affichage des messages de succès ou d'erreur -->
+                @if(session('success'))
+                    <div class="bg-green-500 text-white px-4 py-2 rounded-lg mb-4">
+                        {{ session('success') }}
+                    </div>
+                @elseif(session('error'))
+                    <div class="bg-red-500 text-white px-4 py-2 rounded-lg mb-4">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-[#5B5B5B] text-sm">
                         <thead class="bg-black">
