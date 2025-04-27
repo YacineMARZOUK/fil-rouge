@@ -68,8 +68,17 @@ class ActivityController extends Controller
     }
     public function show(Activity $activity)
     {
-        
-        return view('coach.activities.show', compact('activity'));
+         // Vérifier que l'activité appartient bien au coach connecté
+      if ($activity->coach_id !== Auth::id()) {
+         return redirect()
+            ->route('coach.activities.index')
+            ->with('error', 'Vous n\'êtes pas autorisé à voir cette activité.');
+    }
+    
+    // Charger la relation participants pour l'affichage
+    $activity->load('participants');
+    
+    return view('coach.activities.show', compact('activity'));
     }
 
     public function edit(Activity $activity)
@@ -106,5 +115,23 @@ class ActivityController extends Controller
             ->route('coach.activities.index')
             ->with('success', 'L\'activité a été supprimée avec succès.');
     }
+
+    public function removeParticipant(Activity $activity, User $user)
+{
+    // Vérifier que l'activité appartient bien au coach connecté
+    if ($activity->coach_id !== Auth::id()) {
+        return redirect()
+            ->route('coach.activities.index')
+            ->with('error', 'Vous n\'êtes pas autorisé à modifier cette activité.');
+    }
+    
+    // Retirer le participant
+    $activity->participants()->detach($user->id);
+    
+    return redirect()
+        ->route('coach.activities.show', $activity)
+        ->with('success', 'Le participant a été retiré avec succès.');
+}
+
     
 } 
