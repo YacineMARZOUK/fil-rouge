@@ -22,7 +22,9 @@ class ActivityController extends Controller
      * Afficher les détails d'une activité
      */
     public function show(Activity $activity)
+    
     {
+        $activity->load(['coach', 'participants']);
         return view('client.activities.show', compact('activity'));
     }
 
