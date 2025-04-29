@@ -2,16 +2,16 @@
 
 @section('content')
 <!-- En-tête de la page -->
-<div class="bg-dark py-8">
-    <div class="container mx-auto px-4">
+<div class="bg-dark py-8 pl-8">
+    <div class="container mx-auto px-10">
         <h1 class="text-4xl font-bold mb-4">Notre Boutique</h1>
-        <p class="text-gray-400">Découvrez notre sélection d'équipements et de compléments alimentaires pour atteindre vos objectifs</p>
+        <p class="text-gray-400">Découvrez notre sélection d'équipements et de compléments alimentaires <br> pour atteindre vos objectifs</p>
     </div>
 </div>
 
 <!-- Modal d'ajout au panier -->
-<div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-    <div class="bg-dark border border-gray-700 rounded-lg p-6 max-w-md w-full mx-4 relative">
+<div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 ">
+    <div class="bg-dark border border-gray-700 rounded-lg p-6 max-w-md w-full mx-4 relative ">
         <!-- Bouton de fermeture -->
         <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,8 +45,8 @@
 </div>
 
 <!-- Filtres et Recherche -->
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-8">
+<div class="container mx-auto px-10 py-8">
+    <div class="flex justify-between items-center mb-8 px-6">
         <form method="GET" action="{{ route('shop') }}" class="flex-1">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-4 w-full md:w-auto">
@@ -59,7 +59,7 @@
                         @endforeach
                     </select>
                     <select name="sort" class="input-field" onchange="this.form.submit()">
-                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Nom</option>
+                        <option value="name" {{ request('sort') == 'name' ? 'selected' : '' }}>Prix</option>
                         <option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Prix croissant</option>
                         <option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Prix décroissant</option>
                     </select>
@@ -68,7 +68,7 @@
                     <input type="text" name="search" placeholder="Rechercher..." 
                            class="input-field w-full pr-10" 
                            value="{{ request('search') }}">
-                    <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 ">
                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -88,7 +88,7 @@
     </div>
 
     <!-- Grille de produits -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-10">
         @foreach($products as $product)
         <div class="card bg-dark hover:shadow-lg transition-shadow duration-300">
             <div class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-800">
