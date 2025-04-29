@@ -12,9 +12,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Client\ActivityController as ClientActivityController;  
 
-Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
-Route::get('/activities/{activity}', [ActivityController::class, 'show'])->name('activities.show');
-Route::get('/activities/{activity}/join', [ActivityController::class, 'join'])->name('activities.join');
 
 
 /*
