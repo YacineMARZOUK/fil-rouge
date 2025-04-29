@@ -3,13 +3,13 @@
 @section('content')
 <!-- En-tête de la page -->
 <div class="bg-black py-8">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 flex justify-center flex-col items-center">
         <h1 class="text-4xl font-bold mb-4 text-white">Programmes Recommandés</h1>
         <p class="text-gray-400">Découvrez les programmes personnalisés pour atteindre vos objectifs de fitness</p>
     </div>
 </div>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-[80px] py-8">
     @if(session('success'))
         <div class="bg-[#CDFB47] text-black px-4 py-3 rounded-lg shadow relative mb-6" role="alert">
             <span class="block sm:inline">{{ session('success') }}</span>
