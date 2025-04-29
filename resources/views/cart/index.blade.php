@@ -3,13 +3,13 @@
 @section('content')
 <!-- En-tête de la page -->
 <div class="bg-dark py-8">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto flex justify-center flex-col items-center">
         <h1 class="text-4xl font-bold mb-4">Mon Panier</h1>
         <p class="text-gray-400">Gérez vos articles et passez commande</p>
     </div>
 </div>
 
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-[80px] py-8">
     @if($cartItems->count() > 0)
         <div class="bg-dark border border-gray-700 rounded-lg p-6 shadow-lg">
             <div class="flex flex-col space-y-4">
