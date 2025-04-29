@@ -55,16 +55,6 @@ class Program extends Model
         };
     }
 
-    public function getStatusFormattedAttribute()
-    {
-        return match($this->status) {
-            'draft' => 'Brouillon',
-            'active' => 'Actif',
-            'completed' => 'Terminé',
-            'cancelled' => 'Annulé',
-            default => $this->status
-        };
-    }
 
     public function getDurationFormattedAttribute()
     {

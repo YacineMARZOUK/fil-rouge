@@ -24,7 +24,7 @@ class ProgramController extends Controller
     // Déduire le niveau de difficulté selon le niveau d'activité
     $difficulty = match ($userGoal->niveau_activite) {
         'sedentaire' => 'beginner',
-        'moderement_actif' => 'intermediate',
+        'modere' => 'intermediate',
         'actif', 'tres_actif' => 'advanced',
         default => 'beginner'
     };

@@ -76,7 +76,6 @@
                         <select id="niveau_activite" name="niveau_activite" class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300" required>
                             <option value="">Sélectionnez votre niveau d'activité</option>
                             <option value="sedentaire" {{ old('niveau_activite') == 'sedentaire' ? 'selected' : '' }}>Sédentaire</option>
-                            <option value="leger" {{ old('niveau_activite') == 'leger' ? 'selected' : '' }}>Léger</option>
                             <option value="modere" {{ old('niveau_activite') == 'modere' ? 'selected' : '' }}>Modéré</option>
                             <option value="actif" {{ old('niveau_activite') == 'actif' ? 'selected' : '' }}>Actif</option>
                             <option value="tres_actif" {{ old('niveau_activite') == 'tres_actif' ? 'selected' : '' }}>Très actif</option>
