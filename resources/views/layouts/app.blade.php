@@ -110,15 +110,15 @@
 <body class="min-h-screen">
     <!-- Navigation -->
     <nav class="navbar-fixed">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-10">
             <div class="flex items-center justify-between h-20">
                 <!-- Logo -->
-                <a href="{{ route('home') }}" class="text-2xl font-bold z-50">
+                <a href="{{ route('home') }}" class="text-2xl font-bold z-50 pl-8">
                     <span class="text-white">GAIN</span><span class="text-primary">ZONE</span>
                 </a>
                 
                 <!-- Navigation Links - Desktop -->
-                <div class="hidden md:flex items-center space-x-8">
+                <div class="hidden md:flex items-center space-x-8 px-10">
                     @auth
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="nav-link">Tableau de bord</a>
@@ -137,7 +137,7 @@
                         <a href="{{ route('contact') }}" class="nav-link">Contact</a>
 
                         <!-- User Menu -->
-                        <div class="relative group">
+                        <div class="relative group ">
                             <button class="nav-link flex items-center">
                                 Mon Compte
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -220,7 +220,7 @@
     </nav>
 
     <!-- Main Content -->
-    <main>
+    <main >
         @if($errors->any())
             <div class="message-alert fixed top-24 right-4 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg">
                 <ul>
@@ -234,9 +234,9 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black py-12 mt-20">
+    <footer class="bg-black py-12 mt-20 pl-8">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-10">
                 <div>
                     <h3 class="text-xl font-bold mb-4">
                         <span class="text-white">GAIN</span><span class="text-primary">ZONE</span>
@@ -256,7 +256,7 @@
                         <li><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                     </ul>
                 </div>
-                <div>
+                <div class="pl-">
                     <h4 class="text-lg font-semibold mb-4">Contact</h4>
                     <ul class="space-y-2 text-gray-400">
                         <li>contact@gainzone.com</li>
