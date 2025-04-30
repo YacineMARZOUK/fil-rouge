@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto py-8 bg-black min-h-screen">
-    <div class="flex justify-between items-center mb-8 px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-around items-center mb-8 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold text-white">Tableau de bord administrateur</h1>
         <a href="{{ route('admin.products.create') }}" class="bg-[#CDFB47] hover:bg-[#b9e735] text-black py-2 px-4 rounded-lg shadow flex items-center transition-colors duration-200">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
