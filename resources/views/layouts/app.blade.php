@@ -91,7 +91,7 @@
 
         /* Style pour le menu déroulant */
         .dropdown-menu {
-            background-color: rgba(17, 24, 39, 0.95);
+            background-color: #000;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 

@@ -57,12 +57,12 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-dark bg-opacity-90 backdrop-blur-sm">
+    <nav class="fixed w-full z-50 bg-dark bg-opacity-90 backdrop-blur-sm ">
         <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-20 px-10">
                 <!-- Logo -->
-                <a href="{{ route('home') }}" class="text-2xl font-bold text-primary">
-                    GainZone
+                <a href="{{ route('home') }}" class="text-2xl font-bold">
+                    <span class="text-white">GAIN</span><span class="text-primary">ZONE</span>
                 </a>
                 
                 <!-- Navigation Links - Desktop -->
