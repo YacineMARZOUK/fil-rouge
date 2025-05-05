@@ -58,6 +58,23 @@
                         <option value="coach" {{ old('role') == 'coach' ? 'selected' : '' }}>Coach</option>
                     </select>
                 </div>
+                <div>
+                    <label for="phone" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                        Numéro de téléphone
+                    </label>
+                    <input id="phone" type="text" name="phone" value="{{ old('phone') }}"
+                           class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                           placeholder="Entrez votre numéro de téléphone">
+                </div>
+                
+                <div>
+                    <label for="address" class="block text-[#CDFB47] text-lg font-medium mb-2">
+                        Adresse
+                    </label>
+                    <input id="address" type="text" name="address" value="{{ old('address') }}"
+                           class="w-full bg-[#1A1A1A] border-2 border-[#5B5B5B] rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:border-[#CDFB47] focus:ring-0 transition-colors duration-300"
+                           placeholder="Entrez votre adresse">
+                </div>
 
                 @if($errors->any())
                     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
