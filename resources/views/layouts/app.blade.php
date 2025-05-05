@@ -104,6 +104,15 @@
         #mobile-menu {
             background-color: rgba(0, 0, 0, 0.95);
         }
+        
+        /* Style pour le nom d'utilisateur */
+        .username-display {
+            background-color: rgba(205, 251, 71, 0.1);
+            border: 1px solid #CDFB47;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+        }
     </style>
     @stack('styles')
 </head>
@@ -120,6 +129,11 @@
                 <!-- Navigation Links - Desktop -->
                 <div class="hidden md:flex items-center space-x-8 px-10">
                     @auth
+                        <!-- Affichage du nom d'utilisateur -->
+                        <div class="username-display mr-6">
+                            <span class="text-primary">{{ auth()->user()->name }}</span>
+                        </div>
+                        
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="nav-link">Tableau de bord</a>
                             <a href="{{ route('admin.products.index') }}" class="nav-link">Produits</a>
@@ -187,6 +201,11 @@
             <div id="mobile-menu" class="md:hidden hidden pb-4">
                 <div class="flex flex-col space-y-4">
                     @auth
+                        <!-- Affichage du nom d'utilisateur en mobile -->
+                        <div class="username-display self-start mb-2">
+                            <span class="text-primary">{{ auth()->user()->name }}</span>
+                        </div>
+                        
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="nav-link">Tableau de bord</a>
                             <a href="{{ route('admin.products.index') }}" class="nav-link">Produits</a>
@@ -317,4 +336,4 @@
     </script>
     @stack('scripts')
 </body>
-</html> 
+</html>
