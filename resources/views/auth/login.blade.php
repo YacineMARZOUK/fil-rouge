@@ -31,13 +31,7 @@
                 </div>
 
                 <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember_me" type="checkbox" name="remember"
-                               class="h-4 w-4 text-[#CDFB47] focus:ring-[#CDFB47] border-[#5B5B5B] rounded">
-                        <label for="remember_me" class="ml-2 block text-sm text-gray-400">
-                            Se souvenir de moi
-                        </label>
-                    </div>
+                    
 
                     @if (Route::has('password.request'))
                         <a class="text-sm text-[#CDFB47] hover:text-[#5B5B5B] transition-colors duration-300"
