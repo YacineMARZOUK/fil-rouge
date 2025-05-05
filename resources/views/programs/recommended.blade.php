@@ -30,7 +30,7 @@
     @else
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($programs as $programme)
-                <div class="bg-black border border-gray-800 rounded-lg hover:shadow-lg hover:shadow-[#CDFB47]/20 transition-shadow duration-300">
+                <div class="bg-black border border-gray-800 rounded-lg hover:border-[#CDFB47] overflow-hidden shadow-xl sm:rounded-lg p-6 transition-colors duration-200">
                     <div class="p-6">
                         <h2 class="text-xl font-semibold text-white mb-3">{{ $programme->name }}</h2>
                         <p class="text-gray-400 mb-4">{{ Str::limit($programme->description, 100) }}</p>
