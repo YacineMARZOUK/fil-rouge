@@ -60,7 +60,7 @@
                     <div class="space-y-2">
                         <div class="flex justify-between">
                             <span class="text-sm text-gray-400">Catégorie</span>
-                            <span class="text-sm text-gray-200">{{ $product->category }}</span>
+                            <span class="text-sm text-gray-200">{{ $product->type }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-sm text-gray-400">Prix</span>
