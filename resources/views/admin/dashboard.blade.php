@@ -30,7 +30,7 @@
 
             <div class="bg-black border border-[#5B5B5B] shadow-xl rounded-lg p-6">
                 <h3 class="text-xl font-semibold mb-2 text-white">Commandes</h3>
-                <p class="text-4xl font-bold text-[#CDFB47]">{{ $stats['total_orders'] }}</p>
+                <p class="text-4xl font-bold text-[#CDFB47]">{{ $stats['total_cart_items'] }}</p>
             </div>
         </div>
 
