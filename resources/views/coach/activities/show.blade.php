@@ -54,8 +54,7 @@
                                         <tr>
                                             <th class="py-3 px-4 text-left font-semibold text-gray-300">Nom</th>
                                             <th class="py-3 px-4 text-left font-semibold text-gray-300">Email</th>
-                                            <th class="py-3 px-4 text-left font-semibold text-gray-300">Date d'inscription</th>
-                                            <th class="py-3 px-4 text-left font-semibold text-gray-300">Actions</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-gray-800">
@@ -63,17 +62,10 @@
                                             <tr>
                                                 <td class="py-2 px-4">{{ $participant->name }}</td>
                                                 <td class="py-2 px-4">{{ $participant->email }}</td>
-                                                <td class="py-2 px-4">{{ $participant->pivot->created_at->format('d/m/Y H:i') }}</td>
-                                                <td class="py-2 px-4">
-                                                    <form action="{{ route('coach.activities.remove-participant', [$activity, $participant]) }}" method="POST" class="inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700" 
-                                                                onclick="return confirm('Êtes-vous sûr de vouloir retirer ce participant ?')">
-                                                            <i class="fas fa-user-minus mr-1"></i> Retirer
-                                                        </button>
-                                                    </form>
-                                                </td>
+                                               
+                                            
+                                                    
+                                                
                                             </tr>
                                         @endforeach
                                     </tbody>
