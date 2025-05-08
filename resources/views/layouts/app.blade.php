@@ -152,13 +152,13 @@
 
                         <!-- User Menu -->
                         <div class="relative group ">
-                            <button class="nav-link flex items-center">
+                            <button id="monCOmpte" class=" flex items-center">
                                 Mon Compte
                                 <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                 </svg>
                             </button>
-                            <div class="absolute right-0 mt-2 w-48 dropdown-menu rounded-lg shadow-xl py-2 hidden group-hover:block">
+                            <div class="absolute right-0 mt-2 w-48 dropdown-menu rounded-lg shadow-xl py-2 hidden ">
                                 <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm nav-link">Profil</a>
                                 
                                 @if(auth()->user()->role === 'admin')
@@ -308,6 +308,12 @@
 
     <!-- Scripts -->
     <script>
+
+        document.getElementById('monCOmpte').addEventListener('click', function() {
+            const dropdown = document.querySelector('.dropdown-menu');
+            dropdown.classList.toggle('hidden');
+        });
+
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
